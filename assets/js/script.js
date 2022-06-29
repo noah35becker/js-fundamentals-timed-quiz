@@ -1,4 +1,7 @@
 
+var pageContent = document.querySelector('main');
+
+
 class Choice{
     constructor(choiceText, rightAns){
         this.text = choiceText;
@@ -38,3 +41,20 @@ class User{
         return this.highScore;
     }
 }
+
+
+
+function showLoginScreen(){
+    var newUserBtn = document.createElement('button');
+    newUserBtn.textContent = 'New user';
+    newUserBtn.classList.add('btn', 'login-btn');
+
+    var returningUserBtn = document.createElement('button');
+    returningUserBtn.textContent = 'Returning user';
+    returningUserBtn.classList.add('btn', 'login-btn');
+
+    pageContent.appendChild(newUserBtn);
+    pageContent.appendChild(returningUserBtn);
+}
+
+showLoginScreen();
