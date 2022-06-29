@@ -10,12 +10,14 @@ const returningUserBtn = document.createElement('button');
     returningUserBtn.classList.add('btn', 'login-btn');
 
 const newUserForm = document.createElement('form');
-    newUserForm.setAttribute('id', 'new-user-form');
+    newUserForm.id = 'new-user-form';
     newUserForm.className = 'login-form';
+    newUserForm.textContent = 'Enter new user info'
 
 const returningUserForm = document.createElement('form');
-    returningUserForm.setAttribute('id', 'returning-user-form');
+    returningUserForm.id = 'returning-user-form';
     returningUserForm.className = 'login-form';
+    returningUserForm.textContent = 'Enter login info'
 
 const usernameLabel = document.createElement('label');
     usernameLabel.setAttribute('for', 'username-input');
@@ -39,11 +41,14 @@ const passwordLabel2 = document.createElement('label');
     passwordLabel2.setAttribute('for', 'password-input-2');
     passwordLabel2.textContent = 'Re-enter password:';
 
-const passwordInput2 = passwordInput1.cloneNode();
-    passwordInput2.setAttribute('name', 'password-input-2')
+const passwordInput2 = document.createElement('input');
+    passwordInput2.setAttribute('type', 'password');
+    passwordInput2.setAttribute('name', 'password-input-1');
+    passwordInput2.setAttribute('placeholder', 're-enter password');
 
 var loginSubmitBtn = document.createElement('button');
 // Later, set the 'form' attribute to match the given form's id
+// Later, set the textContent to 'Register' or 'Login'
 
 
 
@@ -104,8 +109,17 @@ function showLoginScreen(){
 function showNewUserScreen(){
     pageClear();
 
-    
+    newUserForm.appendChild(usernameLabel);
+    newUserForm.appendChild(usernameInput);
+    newUserForm.appendChild(passwordLabel1);
+    newUserForm.appendChild(passwordInput1);
+
+    loginSubmitBtn.setAttribute('form', newUserForm.id);
+    loginSubmitBtn.textContent = 'Register';
+    newUserForm.appendChild(loginSubmitBtn);
+
+    pageContent.appendChild(newUserForm);
 }
 
 
-showLoginScreen();
+showNewUserScreen();
