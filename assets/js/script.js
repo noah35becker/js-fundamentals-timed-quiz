@@ -19,27 +19,15 @@ const returningUserForm = document.createElement('form');
     returningUserForm.className = 'login-form';
     returningUserForm.textContent = 'Enter login info'
 
-const usernameLabel = document.createElement('label');
-    usernameLabel.setAttribute('for', 'username-input');
-    usernameLabel.textContent = 'Username:';
-
 const usernameInput = document.createElement('input');
     usernameInput.setAttribute('type', 'text');
     usernameInput.setAttribute('name', 'username-input');
     usernameInput.setAttribute('placeholder', 'username');
 
-const passwordLabel1 = document.createElement('label');
-    passwordLabel1.setAttribute('for', 'password-input-1');
-    passwordLabel1.textContent = 'Password:';
-
 const passwordInput1 = document.createElement('input');
     passwordInput1.setAttribute('type', 'password');
     passwordInput1.setAttribute('name', 'password-input-1');
     passwordInput1.setAttribute('placeholder', 'password');
-
-const passwordLabel2 = document.createElement('label');
-    passwordLabel2.setAttribute('for', 'password-input-2');
-    passwordLabel2.textContent = 'Re-enter password:';
 
 const passwordInput2 = document.createElement('input');
     passwordInput2.setAttribute('type', 'password');
@@ -109,9 +97,7 @@ function showLoginScreen(){
 function showNewUserScreen(){
     pageClear();
 
-    newUserForm.appendChild(usernameLabel);
     newUserForm.appendChild(usernameInput);
-    newUserForm.appendChild(passwordLabel1);
     newUserForm.appendChild(passwordInput1);
 
     loginSubmitBtn.setAttribute('form', newUserForm.id);
