@@ -35,6 +35,14 @@ const returningUserForm = document.createElement('form');
     returningUserForm.className = 'login-form';
     returningUserForm.textContent = 'Enter login info';
 
+const switchToReturningUserBtn = document.createElement('button');
+    switchToReturningUserBtn.classList.add('btn', 'switch-btn');    
+    switchToReturningUserBtn.textContent = 'Already signed up? Login here';
+
+const switchToNewUserBtn = document.createElement('button');
+    switchToNewUserBtn.classList.add('btn', 'switch-btn');
+    switchToNewUserBtn.textContent = 'No account yet? Register here';
+
 const usernameInput = document.createElement('input');
     usernameInput.setAttribute('type', 'text');
     usernameInput.setAttribute('name', 'username-input');
@@ -134,6 +142,9 @@ function showUserTypeScreen(){
 
 function showNewUserScreen(){
     pageClear();
+    resetForms();
+
+    pageContent.appendChild(switchToReturningUserBtn);
 
     newUserForm.appendChild(usernameInput);
     newUserForm.appendChild(passwordInput1);
@@ -152,6 +163,9 @@ function showNewUserScreen(){
 
 function showReturningUserScreen(){
     pageClear();
+    resetForms();
+
+    pageContent.appendChild(switchToNewUserBtn);
 
     returningUserForm.appendChild(usernameInput);
     returningUserForm.appendChild(passwordInput1);
@@ -228,7 +242,7 @@ function loginInfoErrors(formID){
     else if (formID === returningUserForm.id) {
         var password2Val = passwordInput2.value;
 
-        if(password2Val === '')
+        if(password2Val === '' && !(password1Val === ''))
             errs.push('You must re-enter the password');
         else if (!(password2Val === password1Val))
             errs.push('The passwords do not match');
@@ -284,7 +298,7 @@ loginSubmitBtn.addEventListener('click', function(event){
     var userErrors = loginInfoErrors(formID);
     
     if (userErrors){
-        errorMessagesEl.innerHTML = userErrors.join('<br>');
+        errorMessagesEl.innerHTML = userErrors.join('<br/>');
         pageContent.appendChild(errorMessagesEl);
     }
     else{
@@ -298,13 +312,13 @@ loginSubmitBtn.addEventListener('click', function(event){
             else{
                 saveUsers(submittedUser);
                 console.log('new user created with the given info!'); //really, this should load submittedUser's info onto the page
-                resetForms();
+                //show next screen
             }
         }else if (formID === returningUserForm.id){
             submittedUser = doesUserAlreadyExist(submittedUser, formID);
             if(submittedUser){
                 console.log('username/password validated!'); //really, this should load submittedUser's info onto the page
-                resetForms();
+                //show next screen
             }
             else{
                 errorMessagesEl.textContent = 'Invalid username/password combination'; //Animate this so it fades away?
@@ -326,9 +340,13 @@ showPasswordCheckbox.addEventListener('change', function(){
 });
 
 
+newUserBtn.addEventListener('click', showNewUserScreen);
+switchToNewUserBtn.addEventListener('click', showNewUserScreen);
 
+returningUserBtn.addEventListener('click', showReturningUserScreen);
+switchToReturningUserBtn.addEventListener('click', showReturningUserScreen);
 
 
 
 //EXECUTION
-showReturningUserScreen();
+showUserTypeScreen();
