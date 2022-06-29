@@ -108,4 +108,19 @@ function showNewUserScreen(){
 }
 
 
-showNewUserScreen();
+function showReturningUserScreen(){
+    pageClear();
+
+    returningUserForm.appendChild(usernameInput);
+    returningUserForm.appendChild(passwordInput1);
+    returningUserForm.appendChild(passwordInput2);
+
+    loginSubmitBtn.setAttribute('form', returningUserForm.id);
+    loginSubmitBtn.textContent = 'Login';
+    returningUserForm.appendChild(loginSubmitBtn);
+
+    pageContent.appendChild(returningUserForm);
+}
+
+
+showReturningUserScreen();
