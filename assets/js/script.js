@@ -292,9 +292,6 @@ function showCurrentQuestion(){
 
         choicesWrapper.appendChild(choiceEl);
     }
-
-    // IMHERE RIGHT NOW
-    //start timer, using refreshTimeLeft + setInterVal + a while loop
 }
 
 
@@ -430,6 +427,9 @@ function startQuizTimer(){
 
 
 function refreshTimeLeft(){
+    if (timeLeft < 0)
+        timeLeft = 0;
+
     timerEl.textContent = 'Time remaining: ' + timeLeft;
 }
 
@@ -535,7 +535,11 @@ function choiceBtnListener(){
             showCurrentQuestion();
     }
     else
-        ; //add in wrong choice response
+        timeLeft -= TIME_PENALTY;
+        refreshTimeLeft();
+        this.append(' ❌');
+        this.setAttribute('disabled', '');
+        //add other css restyling, e.g. making the button pink-red
 }
 
 
