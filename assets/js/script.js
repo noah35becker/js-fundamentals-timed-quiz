@@ -10,7 +10,9 @@ const CHARACTERS = {
 
 //DATA STORAGE
 const users = JSON.parse(localStorage.getItem('users')) || [];
+var currentUser;
 const questions = [];
+
 
 
 
@@ -55,12 +57,12 @@ const passwordInput1 = document.createElement('input');
 
 const passwordInput2 = document.createElement('input');
     passwordInput2.setAttribute('type', 'password');
-    passwordInput2.setAttribute('name', 'password-input-1');
+    passwordInput2.setAttribute('name', 'password-input-2');
     passwordInput2.setAttribute('placeholder', 're-enter password');
 
 const showPasswordCheckbox = document.createElement('input');
     showPasswordCheckbox.setAttribute('type', 'checkbox');
-    showPasswordCheckbox.setAttribute('name', 'show-password');
+    showPasswordCheckbox.setAttribute('id', 'show-password');
 
 const showPasswordLabel = document.createElement('label');
     showPasswordLabel.setAttribute('for', 'show-password');
@@ -68,12 +70,12 @@ const showPasswordLabel = document.createElement('label');
 
 const confirmTermsCheckbox = document.createElement('input');
     confirmTermsCheckbox.setAttribute('type', 'checkbox');
-    confirmTermsCheckbox.setAttribute('name', 'confirm-terms');
+    confirmTermsCheckbox.setAttribute('id', 'confirm-terms')
 
 const confirmTermsLabel = document.createElement('label');
     confirmTermsLabel.setAttribute('for', 'confirm-terms');
     confirmTermsLabel.innerHTML =
-        '<p><span>Security disclaimer:</span> I understand that this site does NOT store my username and password <em>securely</em></p>'; //UPDATE THIS TEXT
+        '<p><span>Security disclaimer:</span> I understand that this site does NOT store my username and password <em>securely</em></p>';
 
 var loginSubmitBtn = document.createElement('button');
     // Later, set the 'form' attribute to match the given form's id
@@ -81,6 +83,29 @@ var loginSubmitBtn = document.createElement('button');
 
 var errorMessagesEl = document.createElement('p');
     errorMessagesEl.className = 'errors';
+
+var userInfoEl = document.createElement('h3');
+    userInfoEl.className = 'user-info';
+
+var timerEl = document.createElement('h3');
+    const TIME_ALLOWED = 120;
+    const TIME_PENALTY = 10;
+    var timeLeft;
+    timerEl.className = 'timer';
+
+const startQuizInfo = document.createElement('p');
+    startQuizInfo.className = 'start-quiz-info';
+    startQuizInfo.innerHTML =
+        'Try to answer the following Javascript-related questions within the '
+        + TIME_ALLOWED
+        + '-second time limit.<br/>A wrong answer will penalize your time by '
+        + TIME_PENALTY
+        + ' seconds.<br/>Your final score will be equal to the time remaining at the end of your quiz.'
+        ;
+
+const startQuizBtn = document.createElement('button');
+    startQuizBtn.classList.add('btn', 'start-btn');
+    startQuizBtn.textContent = 'Start Quiz';
 
 
 
@@ -148,6 +173,7 @@ function showNewUserScreen(){
 
     newUserForm.appendChild(usernameInput);
     newUserForm.appendChild(passwordInput1);
+    newUserForm.appendChild(passwordInput2);
     newUserForm.appendChild(showPasswordCheckbox);
     newUserForm.appendChild(showPasswordLabel);
     newUserForm.appendChild(confirmTermsCheckbox);
@@ -169,7 +195,6 @@ function showReturningUserScreen(){
 
     returningUserForm.appendChild(usernameInput);
     returningUserForm.appendChild(passwordInput1);
-    returningUserForm.appendChild(passwordInput2);
     returningUserForm.appendChild(showPasswordCheckbox);
     returningUserForm.appendChild(showPasswordLabel);
 
@@ -178,6 +203,19 @@ function showReturningUserScreen(){
     returningUserForm.appendChild(loginSubmitBtn);
 
     pageContent.appendChild(returningUserForm);
+}
+
+
+function showStartQuizScreen(){
+    pageClear();
+    resetTimer();
+
+    refreshTimeLeft();
+    
+    pageContent.appendChild(userInfoEl);
+    pageContent.appendChild(timerEl);
+    pageContent.appendChild(startQuizInfo);
+    pageContent.appendChild(startQuizBtn);
 }
 
 
@@ -238,12 +276,10 @@ function loginInfoErrors(formID){
     if (formID === newUserForm.id){
         if (!confirmTermsCheckbox.checked)
             errs.push('You must confirm that you understand the security disclaimer');
-    }
-    else if (formID === returningUserForm.id) {
+    
         var password2Val = passwordInput2.value;
-
-        if(password2Val === '' && !(password1Val === ''))
-            errs.push('You must re-enter the password');
+        if(password2Val === '')
+            errs.push('You must re-enter your password');
         else if (!(password2Val === password1Val))
             errs.push('The passwords do not match');
     }
@@ -257,6 +293,24 @@ function loginInfoErrors(formID){
 function resetForms(){
     newUserForm.reset();
     returningUserForm.reset();
+    passwordInput1.setAttribute('type', 'password');
+    passwordInput2.setAttribute('type', 'password');
+}
+
+
+function resetTimer(){
+    timeLeft = TIME_ALLOWED;
+}
+
+
+function refreshTimeLeft(){
+    timerEl.innerHTML = 'Time remaining: ' + timeLeft;
+}
+
+
+function setCurrentUser(user){
+    currentUser = user;
+    userInfoEl.innerHTML = currentUser.username + '<br/>' + 'Current high score: ' + currentUser.highScore;
 }
 
 
@@ -268,17 +322,17 @@ function saveUsers(newUser){
 }
 
 
-function doesUserAlreadyExist(submittedUser, formID){
+function doesUserAlreadyExist(user, formID){
     for (i = 0; i < users.length; i++)
         if (
             formID === newUserForm.id
-            && submittedUser.username === users[i].username
+            && user.username === users[i].username
         )
             return true;
         else if (
             formID === returningUserForm.id
-            && submittedUser.username === users[i].username
-            && submittedUser.password === users[i].password
+            && user.username === users[i].username
+            && user.password === users[i].password
         )
             return users[i]; //this ensures that the user's high score gets properly loaded upon login
     
@@ -289,6 +343,24 @@ function doesUserAlreadyExist(submittedUser, formID){
 
 
 //LISTENERS
+newUserBtn.addEventListener('click', showNewUserScreen);
+switchToNewUserBtn.addEventListener('click', showNewUserScreen);
+
+returningUserBtn.addEventListener('click', showReturningUserScreen);
+switchToReturningUserBtn.addEventListener('click', showReturningUserScreen);
+
+
+showPasswordCheckbox.addEventListener('change', function(){
+    if (this.checked){
+        passwordInput1.setAttribute('type', 'text');
+        passwordInput2.setAttribute('type', 'text');
+    }else{
+        passwordInput1.setAttribute('type', 'password');
+        passwordInput2.setAttribute('type', 'password');
+    }
+});
+
+
 loginSubmitBtn.addEventListener('click', function(event){
     event.preventDefault();
     
@@ -306,19 +378,19 @@ loginSubmitBtn.addEventListener('click', function(event){
         
         if (formID === newUserForm.id){
             if (doesUserAlreadyExist(submittedUser, formID)){
-                errorMessagesEl.textContent = 'A user with this username already exists!'; //Animate this so it fades away?
+                errorMessagesEl.textContent = 'A user with this username already exists'; //Animate this so it fades away?
                 pageContent.appendChild(errorMessagesEl);
             }
             else{
                 saveUsers(submittedUser);
-                console.log('new user created with the given info!'); //really, this should load submittedUser's info onto the page
-                //show next screen
+                setCurrentUser(submittedUser);
+                showStartQuizScreen();
             }
         }else if (formID === returningUserForm.id){
             submittedUser = doesUserAlreadyExist(submittedUser, formID);
             if(submittedUser){
-                console.log('username/password validated!'); //really, this should load submittedUser's info onto the page
-                //show next screen
+                setCurrentUser(submittedUser);
+                showStartQuizScreen();
             }
             else{
                 errorMessagesEl.textContent = 'Invalid username/password combination'; //Animate this so it fades away?
@@ -329,24 +401,13 @@ loginSubmitBtn.addEventListener('click', function(event){
 });
 
 
-showPasswordCheckbox.addEventListener('change', function(){
-    if (this.checked){
-        passwordInput1.setAttribute('type', 'text');
-        passwordInput2.setAttribute('type', 'text');
-    }else{
-        passwordInput1.setAttribute('type', 'password');
-        passwordInput2.setAttribute('type', 'password');
-    }
+startQuizBtn.addEventListener('click', function(){
+    //begin quiz
 });
 
 
-newUserBtn.addEventListener('click', showNewUserScreen);
-switchToNewUserBtn.addEventListener('click', showNewUserScreen);
 
-returningUserBtn.addEventListener('click', showReturningUserScreen);
-switchToReturningUserBtn.addEventListener('click', showReturningUserScreen);
-
-
-
-//EXECUTION
-showUserTypeScreen();
+//INITIALIZE PAGE
+//TESTER CONDIITIONS FOR NOW
+setCurrentUser(users[0]);
+showStartQuizScreen();
