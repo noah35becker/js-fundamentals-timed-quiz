@@ -185,8 +185,15 @@ var questionTextEl = document.createElement('h4');
 var choicesWrapper = document.createElement('div');
     choicesWrapper.className = 'choices-wrapper';
 
-var choiceEl = document.createElement('button'); //to be cloned later
-    choiceEl.classList.add('btn', 'choice-btn');
+var choiceElTemplate = document.createElement('button'); //to be cloned later
+    choiceElTemplate.classList.add('btn', 'choice-btn');
+    
+const quizWrapper = document.createElement('div');
+    quizWrapper.className = 'quiz-wrapper';
+    quizWrapper.appendChild(questionCounterEl);
+    quizWrapper.appendChild(questionTextEl);
+    quizWrapper.appendChild(choicesWrapper);
+    
 
 
 //FUNCTIONS
@@ -259,12 +266,12 @@ function showPreQuizScreen(){
 function showQuizScreen(){
     pageContent.removeChild(preQuizWrapper);
 
-    pageContent.appendChild(questionCounterEl);
-    pageContent.appendChild(questionTextEl);
-    pageContent.appendChild(choicesWrapper);
+    pageContent.appendChild(quizWrapper);
 
     currentQIndex = 0;
     showCurrentQuestion();
+
+    startQuizTimer();
 }
 
 
@@ -278,12 +285,12 @@ function showCurrentQuestion(){
     
     choicesWrapper.innerHTML = '';
     for (i = 0; i < currentQ.choices.length; i++){
-        var thisChoiceEl = choiceEl.cloneNode();
-            thisChoiceEl.textContent = currentQ.choices[i].text;
-            thisChoiceEl.setAttribute('choice-id', i);
-            thisChoiceEl.addEventListener('click', choiceBtnListener);
+        var choiceEl = choiceElTemplate.cloneNode();
+            choiceEl.textContent = currentQ.choices[i].text;
+            choiceEl.setAttribute('choice-id', i);
+            choiceEl.addEventListener('click', choiceBtnListener);
 
-        choicesWrapper.appendChild(thisChoiceEl);
+        choicesWrapper.appendChild(choiceEl);
     }
 
     // IMHERE RIGHT NOW
@@ -338,8 +345,8 @@ function doesUserAlreadyExist(user, formID){
 }
 
 
-function loginInfoErrors(formID){
-    usernameInput.value = usernameInput.value.toLowerCase(); //this also updates the username to lowercase on screen
+function loginErrors(formID){
+    usernameInput.value = usernameInput.value.toLowerCase().trim(); //this also updates the username to lowercase/trimmed on screen
     if (passwordInput1.value === '' && !(passwordInput2.value === '')){ //this also updates passwords 1 and 2 on screen
         passwordInput1.value = passwordInput2.value;
         passwordInput2.value = '';
@@ -407,8 +414,23 @@ function resetTimer(){
 }
 
 
+function startQuizTimer(){
+    var quizTimer = setInterval(
+        function(){
+            timeLeft--;
+            refreshTimeLeft();
+            if (timeLeft === 0){
+                clearInterval(quizTimer);
+                //go to <game over / you finished the game> screen
+            }
+        }, 1000)
+        ;    
+}
+
+
+
 function refreshTimeLeft(){
-    timerEl.innerHTML = 'Time remaining: ' + timeLeft;
+    timerEl.textContent = 'Time remaining: ' + timeLeft;
 }
 
 
@@ -464,7 +486,7 @@ loginSubmitBtn.addEventListener('click', function(event){
     errorMessagesEl.remove();
 
     var formID = this.getAttribute('form');
-    var userErrors = loginInfoErrors(formID);
+    var userErrors = loginErrors(formID);
     
     if (userErrors){
         errorMessagesEl.innerHTML = userErrors.join('<br/>');
@@ -508,7 +530,7 @@ function choiceBtnListener(){
     if (qsRandOrder[currentQIndex].choices[this.getAttribute('choice-id')].isRight()){
         currentQIndex++;
         if (currentQIndex > (qsRandOrder.length - 1))
-            console.log('game over / you finished the game'); //to to <game over / you finished the game> screen
+            console.log('game over / you finished the game'); //go to <game over / you finished the game> screen
         else
             showCurrentQuestion();
     }
