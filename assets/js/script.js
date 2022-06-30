@@ -11,7 +11,23 @@ const CHARACTERS = {
 //DATA STORAGE
 const users = JSON.parse(localStorage.getItem('users')) || [];
 var currentUser;
-const questions = [];
+const QUESTIONS = [
+    new Question("#1 - What's the right answer?",
+        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    ),
+    new Question("#2 - What's the right answer?",
+        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    ),
+    new Question("#3 - What's the right answer?",
+        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    ),
+    new Question("#4 - What's the right answer?",
+        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    ),
+    new Question("#5 - What's the right answer?",
+        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    )
+];
 
 
 
