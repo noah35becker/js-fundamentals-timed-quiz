@@ -50,9 +50,13 @@ const CHARACTERS = {
 
 
 
-//DATA STORAGE
+//USERS
 const users = JSON.parse(localStorage.getItem('users')) || [];
 var currentUser;
+
+
+
+//QUIZ QUESTIONS
 const QUESTIONS = [
     new Question("#1 - What's the right answer?",
         new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
@@ -70,8 +74,8 @@ const QUESTIONS = [
         new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
     )
 ];
-var qsCsRandOrder; //an array containing the same content as QUESTIONS, but w order of questions and their choices randomized
-
+var qsRandOrder; //contains the same content as QUESTIONS, but w the order of questions and their choices randomized
+var currentQ;
 
 
 
@@ -144,6 +148,7 @@ var errorMessagesEl = document.createElement('p');
     errorMessagesEl.className = 'errors';
 
 var userInfoEl = document.createElement('h3');
+    var userLoggedIn;
     userInfoEl.className = 'user-info';
 
 var timerEl = document.createElement('h3');
@@ -152,20 +157,36 @@ var timerEl = document.createElement('h3');
     var timeLeft;
     timerEl.className = 'timer';
 
-const startQuizInfo = document.createElement('p');
-    startQuizInfo.className = 'start-quiz-info';
-    startQuizInfo.innerHTML =
+const preQuizInfoEl = document.createElement('p');
+    preQuizInfoEl.className = 'start-quiz-info';
+    preQuizInfoEl.innerHTML =
         'Try to answer the following Javascript-related questions within the '
         + TIME_ALLOWED
         + '-second time limit.<br/>A wrong answer will penalize your time by '
         + TIME_PENALTY
         + ' seconds.<br/>Your final score will be equal to the time remaining at the end of your quiz.'
-        ;
+    ;
 
 const startQuizBtn = document.createElement('button');
     startQuizBtn.classList.add('btn', 'start-btn');
     startQuizBtn.textContent = 'Start Quiz';
 
+const preQuizWrapper = document.createElement('div');
+    preQuizWrapper.classname = 'pre-quiz-wrapper';
+    preQuizWrapper.appendChild(preQuizInfoEl);
+    preQuizWrapper.appendChild(startQuizBtn);
+
+var questionCounterEl = document.createElement('h5');
+    questionCounterEl.className = 'question-counter';
+
+var questionTextEl = document.createElement('h4');
+    questionTextEl.className = 'question-text';
+
+var choicesWrapper = document.createElement('div');
+    choicesWrapper.className = 'choices-wrapper';
+
+var choiceEl = document.createElement('button'); //to be cloned later
+    choiceEl.classList.add('btn', 'choice-btn');
 
 
 //FUNCTIONS
@@ -223,7 +244,7 @@ function showReturningUserScreen(){
 }
 
 
-function showStartQuizScreen(){
+function showPreQuizScreen(){
     pageClear();
     resetTimer();
 
@@ -231,8 +252,40 @@ function showStartQuizScreen(){
     
     pageContent.appendChild(userInfoEl);
     pageContent.appendChild(timerEl);
-    pageContent.appendChild(startQuizInfo);
-    pageContent.appendChild(startQuizBtn);
+    pageContent.appendChild(preQuizWrapper);
+}
+
+
+function showQuizScreen(){
+    pageContent.removeChild(preQuizWrapper);
+
+    pageContent.appendChild(questionCounterEl);
+    pageContent.appendChild(questionTextEl);
+    pageContent.appendChild(choicesWrapper);
+
+    showQuestion(0);
+}
+
+
+
+function showQuestion(index){
+    // IMHERE RIGHT NOW
+    currentQ = qsRandOrder[index];
+    
+    questionCounterEl.textContent = 'Question ' + (index + 1) + ' of ' + qsRandOrder.length;
+    
+    questionTextEl.textContent = qsRandOrder[index].text;
+    
+    choicesWrapper.innerHTML = '';
+    for (i = 0; i < currentQ.choices.length; i++){
+        var thisChoiceEl = choiceEl.cloneNode();
+        thisChoiceEl.textContent = currentQ.choices[i].text;
+        thisChoiceEl.setAttribute('choice-id', i);
+        choicesWrapper.appendChild(thisChoiceEl);
+        //Add event listeners that utilize choice-id
+    }
+
+    //start timer, using refreshTimeLeft + setInterVal + a while loop
 }
 
 
@@ -372,13 +425,13 @@ function randomizeQsCsOrder(){
         return array;
     }
     
-    qsCsRandOrder = QUESTIONS;
+    qsRandOrder = QUESTIONS;
     //randomize choice order for each question
-        qsCsRandOrder.forEach(question => {
+        qsRandOrder.forEach(question => {
             question.choices = randomizeOrder(question.choices);
         });
     //randomize question order
-        qsCsRandOrder = randomizeOrder(qsCsRandOrder);
+        qsRandOrder = randomizeOrder(qsRandOrder);
 }
 
 
@@ -426,13 +479,13 @@ loginSubmitBtn.addEventListener('click', function(event){
             else{
                 saveUsers(submittedUser);
                 setCurrentUser(submittedUser);
-                showStartQuizScreen();
+                showPreQuizScreen();
             }
         }else if (formID === returningUserForm.id){
             submittedUser = doesUserAlreadyExist(submittedUser, formID);
             if(submittedUser){
                 setCurrentUser(submittedUser);
-                showStartQuizScreen();
+                showPreQuizScreen();
             }
             else{
                 errorMessagesEl.textContent = 'Invalid username/password combination'; //Animate this so it fades away?
@@ -445,6 +498,7 @@ loginSubmitBtn.addEventListener('click', function(event){
 
 startQuizBtn.addEventListener('click', function(){
     randomizeQsCsOrder();
+    showQuizScreen();
 });
 
 
@@ -452,4 +506,4 @@ startQuizBtn.addEventListener('click', function(){
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
 setCurrentUser(users[0]);
-showStartQuizScreen();
+showPreQuizScreen();
