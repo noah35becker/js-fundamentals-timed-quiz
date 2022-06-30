@@ -75,7 +75,7 @@ const QUESTIONS = [
     )
 ];
 var qsRandOrder; //contains the same content as QUESTIONS, but w the order of questions and their choices randomized
-var currentQ;
+var currentQIndex;
 
 
 
@@ -263,28 +263,30 @@ function showQuizScreen(){
     pageContent.appendChild(questionTextEl);
     pageContent.appendChild(choicesWrapper);
 
-    showQuestion(0);
+    currentQIndex = 0;
+    showCurrentQuestion();
 }
 
 
 
-function showQuestion(index){
-    // IMHERE RIGHT NOW
-    currentQ = qsRandOrder[index];
+function showCurrentQuestion(){
+    var currentQ = qsRandOrder[currentQIndex];
     
-    questionCounterEl.textContent = 'Question ' + (index + 1) + ' of ' + qsRandOrder.length;
+    questionCounterEl.textContent = 'Question ' + (currentQIndex + 1) + ' of ' + qsRandOrder.length;
     
-    questionTextEl.textContent = qsRandOrder[index].text;
+    questionTextEl.textContent = currentQ.text;
     
     choicesWrapper.innerHTML = '';
     for (i = 0; i < currentQ.choices.length; i++){
         var thisChoiceEl = choiceEl.cloneNode();
-        thisChoiceEl.textContent = currentQ.choices[i].text;
-        thisChoiceEl.setAttribute('choice-id', i);
+            thisChoiceEl.textContent = currentQ.choices[i].text;
+            thisChoiceEl.setAttribute('choice-id', i);
+            thisChoiceEl.addEventListener('click', choiceBtnListener);
+
         choicesWrapper.appendChild(thisChoiceEl);
-        //Add event listeners that utilize choice-id
     }
 
+    // IMHERE RIGHT NOW
     //start timer, using refreshTimeLeft + setInterVal + a while loop
 }
 
@@ -500,6 +502,19 @@ startQuizBtn.addEventListener('click', function(){
     randomizeQsCsOrder();
     showQuizScreen();
 });
+
+
+function choiceBtnListener(){
+    if (qsRandOrder[currentQIndex].choices[this.getAttribute('choice-id')].isRight()){
+        currentQIndex++;
+        if (currentQIndex > (qsRandOrder.length - 1))
+            console.log('game over / you finished the game'); //to to <game over / you finished the game> screen
+        else
+            showCurrentQuestion();
+    }
+    else
+        ; //add in wrong choice response
+}
 
 
 
