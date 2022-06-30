@@ -56,7 +56,7 @@ var currentUser;
 
 
 
-//QUIZ QUESTIONS
+//QUIZ
 const QUESTIONS = [
     new Question("#1 - What's the right answer?",
         new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
@@ -76,6 +76,7 @@ const QUESTIONS = [
 ];
 var qsRandOrder; //contains the same content as QUESTIONS, but w the order of questions and their choices randomized
 var currentQIndex;
+var quizTimer;
 
 
 
@@ -412,25 +413,37 @@ function resetTimer(){
 
 
 function startQuizTimer(){
-    var quizTimer = setInterval(
-        function(){
-            timeLeft--;
-            refreshTimeLeft();
+    quizTimer = setInterval(
+        function(){ 
             if (timeLeft === 0){
-                clearInterval(quizTimer);
-                //go to <game over / you finished the game> screen
+                stopQuizTimer();
+                return;
+            }
+            if (timeLeft > 0){
+                timeLeft--;
+                refreshTimeLeft();
             }
         }, 1000)
-        ;    
+        ;
 }
 
+
+function stopQuizTimer(){
+    clearInterval(quizTimer);
+}
 
 
 function refreshTimeLeft(){
     if (timeLeft < 0)
         timeLeft = 0;
-
+    
     timerEl.textContent = 'Time remaining: ' + timeLeft;
+
+    if (timeLeft === 0){
+        stopQuizTimer();
+        console.log('game over'); //go to <game over>
+    }
+
 }
 
 
@@ -529,17 +542,20 @@ startQuizBtn.addEventListener('click', function(){
 function choiceBtnListener(){
     if (qsRandOrder[currentQIndex].choices[this.getAttribute('choice-id')].isRight()){
         currentQIndex++;
-        if (currentQIndex > (qsRandOrder.length - 1))
-            console.log('game over / you finished the game'); //go to <game over / you finished the game> screen
+        if (currentQIndex > (qsRandOrder.length - 1)){
+            stopQuizTimer();
+            console.log('you finished the game, with a score of ' + timeLeft); //go to <you finished the game> screen
+        }
         else
             showCurrentQuestion();
     }
-    else
+    else{
         timeLeft -= TIME_PENALTY;
         refreshTimeLeft();
         this.append(' ❌');
         this.setAttribute('disabled', '');
-        //add other css restyling, e.g. making the button pink-red
+        //add other css restylings, e.g. making the button pink-red, giving it a thicker border
+    }
 }
 
 
