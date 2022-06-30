@@ -1,4 +1,46 @@
 
+//CLASSES
+class User{
+    constructor(username, pw){
+        username += ''; this.username = username.toLowerCase();
+        this.password = pw;
+        this.highScore = 0;
+    }
+
+    setHighScore(newScore){
+        if (newScore > this.highScore)
+            this.highScore = newScore;
+
+        return this.highScore;
+    }
+}
+
+
+class Choice{
+    constructor(choiceText, rightAns){
+        this.text = choiceText;
+
+        if (rightAns === undefined)
+            this.rightAnswer = false;
+        else
+            this.rightAnswer = rightAns;
+    }
+
+    isRight(){
+        return this.rightAnswer;
+    }
+}
+
+
+class Question{
+    constructor(questionText, ...choiceObjects){
+        this.text = questionText;
+        this.choices = choiceObjects;
+    }
+}
+
+
+
 //USER INPUT VALIDATION
 const CHARACTERS = {
     alpha: 'abcdefghijklmnopqrstuvwxyz',
@@ -28,6 +70,7 @@ const QUESTIONS = [
         new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
     )
 ];
+var qsCsRandOrder; //an array containing the same content as QUESTIONS, but w order of questions and their choices randomized
 
 
 
@@ -125,48 +168,6 @@ const startQuizBtn = document.createElement('button');
 
 
 
-//CLASSES
-class User{
-    constructor(username, pw){
-        username += ''; this.username = username.toLowerCase();
-        this.password = pw;
-        this.highScore = 0;
-    }
-
-    setHighScore(newScore){
-        if (newScore > this.highScore)
-            this.highScore = newScore;
-
-        return this.highScore;
-    }
-}
-
-
-class Choice{
-    constructor(choiceText, rightAns){
-        this.text = choiceText;
-
-        if (rightAns === undefined)
-            this.rightAnswer = false;
-        else
-            this.rightAnswer = rightAns;
-    }
-
-    isRight(){
-        return this.rightAnswer;
-    }
-}
-
-
-class Question{
-    constructor(questionText, ...choiceObjects){
-        this.text = questionText;
-        this.choices = choiceObjects;
-    }
-}
-
-
-
 //FUNCTIONS
 function pageClear(){
     pageContent.innerHTML = '';
@@ -235,6 +236,14 @@ function showStartQuizScreen(){
 }
 
 
+function resetForms(){
+    newUserForm.reset();
+    returningUserForm.reset();
+    passwordInput1.setAttribute('type', 'password');
+    passwordInput2.setAttribute('type', 'password');
+}
+
+
 function ineligibleCharsString(text, ...charTypes){
     var eligChars = '';
     charTypes.forEach(type => {
@@ -253,6 +262,24 @@ function ineligibleCharsString(text, ...charTypes){
     if (badChars === '')
         return false;
     return badChars.join(' ');
+}
+
+
+function doesUserAlreadyExist(user, formID){
+    for (i = 0; i < users.length; i++)
+        if (
+            formID === newUserForm.id
+            && user.username === users[i].username
+        )
+            return true;
+        else if (
+            formID === returningUserForm.id
+            && user.username === users[i].username
+            && user.password === users[i].password
+        )
+            return users[i]; //this ensures that the user's high score gets properly loaded upon login
+    
+    return false;
 }
 
 
@@ -306,24 +333,6 @@ function loginInfoErrors(formID){
 }
 
 
-function resetForms(){
-    newUserForm.reset();
-    returningUserForm.reset();
-    passwordInput1.setAttribute('type', 'password');
-    passwordInput2.setAttribute('type', 'password');
-}
-
-
-function resetTimer(){
-    timeLeft = TIME_ALLOWED;
-}
-
-
-function refreshTimeLeft(){
-    timerEl.innerHTML = 'Time remaining: ' + timeLeft;
-}
-
-
 function setCurrentUser(user){
     currentUser = user;
     userInfoEl.innerHTML = currentUser.username + '<br/>' + 'Current high score: ' + currentUser.highScore;
@@ -338,21 +347,38 @@ function saveUsers(newUser){
 }
 
 
-function doesUserAlreadyExist(user, formID){
-    for (i = 0; i < users.length; i++)
-        if (
-            formID === newUserForm.id
-            && user.username === users[i].username
-        )
-            return true;
-        else if (
-            formID === returningUserForm.id
-            && user.username === users[i].username
-            && user.password === users[i].password
-        )
-            return users[i]; //this ensures that the user's high score gets properly loaded upon login
+function resetTimer(){
+    timeLeft = TIME_ALLOWED;
+}
+
+
+function refreshTimeLeft(){
+    timerEl.innerHTML = 'Time remaining: ' + timeLeft;
+}
+
+
+function randomizeQsCsOrder(){
+    function randomizeOrder(array){
+        var currentIndex = array.length;
+        var randIndex;
+        
+        while (currentIndex > 0){
+            randIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
     
-    return false;
+            [array[currentIndex], array[randIndex]] = [array[randIndex], array[currentIndex]];
+        }
+
+        return array;
+    }
+    
+    qsCsRandOrder = QUESTIONS;
+    //randomize choice order for each question
+        qsCsRandOrder.forEach(question => {
+            question.choices = randomizeOrder(question.choices);
+        });
+    //randomize question order
+        qsCsRandOrder = randomizeOrder(qsCsRandOrder);
 }
 
 
@@ -418,7 +444,7 @@ loginSubmitBtn.addEventListener('click', function(event){
 
 
 startQuizBtn.addEventListener('click', function(){
-    //begin quiz
+    randomizeQsCsOrder();
 });
 
 
