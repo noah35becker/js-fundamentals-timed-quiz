@@ -72,7 +72,7 @@ var quizTimer;
 
 
 //PAGE ELEMENTS
-const pageContent = document.querySelector('main');
+var pageContent = document.querySelector('main');
 
 const justLoggedOutEl = document.createElement('h4');  
     justLoggedOutEl.className = 'just-logged-out';
@@ -302,7 +302,6 @@ const quizOverWrapper = document.createElement('div');
 
             refreshTimeLeft();
 
-            subheaderLeftWrapper.innerHTML = '';
             subheaderLeftWrapper.appendChild(usernameEl);
             subheaderLeftWrapper.appendChild(userHighScoreEl);
             subheaderLeftWrapper.appendChild(viewHighScoresEl);
@@ -376,23 +375,34 @@ const quizOverWrapper = document.createElement('div');
 
             //IMHERE
 
-            subheaderAllWrapper.innerHTML = '';
-            subheaderLeftWrapper.removeChild(viewHighScoresEl);
-            pageContent.removeChild(preQuizWrapper);
+            pageClear();
 
             globalHighScoresWrapper.innerHTML = rankedHighScoresHTML().join('');
 
+            subheaderLeftWrapper.appendChild(usernameEl);
+            subheaderLeftWrapper.appendChild(userHighScoreEl);
+            subheaderLeftWrapper.appendChild(userHighScoreEl);
             subheaderLeftWrapper.appendChild(returnToQuizEl);
-            subheaderLeftWrapper.appendChild(logOutEl); //this was already on the page, but re-appending it ensures that it appears AFTER returnToQuizEl
+            subheaderLeftWrapper.appendChild(logOutEl);
+
             subheaderAllWrapper.appendChild(subheaderLeftWrapper);
+
+            pageContent.appendChild(subheaderAllWrapper);
             pageContent.appendChild(globalHighScoresWrapper);
         }
 
 
         function showQuizScreen(){
-            pageContent.removeChild(preQuizWrapper);
-            subheaderLeftWrapper.removeChild(viewHighScoresEl);
+            pageClear();
 
+            subheaderLeftWrapper.appendChild(usernameEl);
+            subheaderLeftWrapper.appendChild(userHighScoreEl);
+            subheaderLeftWrapper.appendChild(logOutEl);
+
+            subheaderAllWrapper.appendChild(subheaderLeftWrapper);
+            subheaderAllWrapper.appendChild(timerEl);
+
+            pageContent.appendChild(subheaderAllWrapper);
             pageContent.appendChild(quizWrapper);
 
             currentQIndex = 0;
@@ -422,10 +432,16 @@ const quizOverWrapper = document.createElement('div');
 
 
         function showQuizOverScreen(){
-            subheaderAllWrapper.removeChild(timerEl);
-            pageContent.removeChild(quizWrapper);
+            pageClear();
+
+            subheaderLeftWrapper.appendChild(usernameEl);
+            subheaderLeftWrapper.appendChild(userHighScoreEl);
             subheaderLeftWrapper.appendChild(viewHighScoresEl);
-            subheaderLeftWrapper.appendChild(logOutEl); //this was already on the page, but re-appending it ensures that it appears AFTER viewHighScoresEl
+            subheaderLeftWrapper.appendChild(logOutEl);
+
+            subheaderAllWrapper.appendChild(subheaderLeftWrapper);
+
+            pageContent.appendChild(subheaderAllWrapper);
 
             if (timeLeft === 0)
                 quizOverText.innerHTML = '<span>You did not finish the quiz in time</span><br/>Better luck next time!';
@@ -447,6 +463,9 @@ const quizOverWrapper = document.createElement('div');
 
         function pageClear(){
             pageContent.innerHTML = '';
+            subheaderAllWrapper.innerHTML = '';
+            subheaderLeftWrapper.innerHTML = '';
+
         }
 
         function resetForms(){
@@ -707,7 +726,7 @@ viewHighScoresEl.addEventListener('click', showHighScoresScreen);
 
 logOutEl.addEventListener('click', function(){
     stopQuizTimer();
-    showUserTypeScreen();
+    showUserTypeScreen(true);
 });
 
 
@@ -745,7 +764,7 @@ tryAgainBtn.addEventListener('click', showPreQuizScreen);
 
 quitBtn.addEventListener('click', function(){
     currentUser = null;
-    showUserTypeScreen();
+    showUserTypeScreen(true);
 });
 
 
