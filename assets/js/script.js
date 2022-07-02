@@ -321,6 +321,7 @@ const quizOverWrapper = document.createElement('div');
                 var output = ["<h3 class='global-high-scores-title'>", 'Global high scores', '</h3>', "<ul class='global-high-scores-list'>"];
                 const OUTPUT_NUM_INITIAL_ELEMS = output.length;
                 const OUTPUT_TITLE_INDEX = 1;
+                const MAX_USERS_PER_HIGH_SCORE = 3;
                 var highestScoreSoFar = TIME_ALLOWED;
 
                 const lowestHighScore = users.reduce(function(prevUser, currentUser){
@@ -339,13 +340,20 @@ const quizOverWrapper = document.createElement('div');
                     for (i = 0; i < users.length; i++){
                         if (users[i].highScore < highestScoreSoFar){
                             if (users[i].highScore > thisHighScore){
-                                thisHighScoreUsernames = [users[i].username];
+                                if (i === currentUserIndex)
+                                    thisHighScoreUsernames = ['<span>' + users[i].username + '</span>'];
+                                else
+                                    thisHighScoreUsernames = [users[i].username];
                                 thisHighScore = users[i].highScore;
                             }
                             else if (users[i].highScore === thisHighScore){
                                 if (typeof thisHighScoreUsernames === 'object'){
-                                    if (thisHighScoreUsernames.length < 3) //three usernames max per given high score value
-                                        thisHighScoreUsernames.push(users[i].username);
+                                    if (thisHighScoreUsernames.length < MAX_USERS_PER_HIGH_SCORE){
+                                        if (i === currentUserIndex)
+                                            thisHighScoreUsernames.push('<span>' + users[i].username + '</span>');
+                                        else
+                                            thisHighScoreUsernames.push(users[i].username);
+                                    }
                                     else
                                         thisHighScoreUsernames = thisHighScoreUsernames.join(', ') + '…';
                                 }
@@ -771,5 +779,4 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-    setCurrentUserIndex(0);
-    showPreQuizScreen();
+    showUserTypeScreen();
