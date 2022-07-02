@@ -1,20 +1,9 @@
 
 //CLASSES
-class User{
-    constructor(username, pw){
-        this.username = '' + username;
-        this.password = pw;
-        this.highScore = 0;
-    }
-
-    setHighScore(newScore){
-        if (newScore > this.highScore){
-            this.highScore = newScore;
-            return true;
-        }
-
-        return false;
-    }
+var User = function(username, pw){
+    this.username = '' + username;
+    this.password = pw;
+    this.highScore = 0;
 }
 
 
@@ -54,7 +43,7 @@ const CHARACTERS = {
 
 //USERS
 const users = JSON.parse(localStorage.getItem('users')) || [];
-var currentUser;
+var currentUserIndex;
 
 
 
@@ -84,6 +73,14 @@ var quizTimer;
 
 //PAGE ELEMENTS
 const pageContent = document.querySelector('main');
+
+const justLoggedOutEl = document.createElement('h4');  
+    justLoggedOutEl.className = 'just-logged-out';
+    justLoggedOutEl.textContent = 'You have been logged out';
+
+const welcomeText = document.createElement('h3');
+    welcomeText.className = 'welcome-text';
+    welcomeText.textContent = 'Welcome';
 
 const newUserBtn = document.createElement('button');
     newUserBtn.textContent = 'New user';
@@ -150,9 +147,26 @@ var loginSubmitBtn = document.createElement('button');
 var errorMessagesEl = document.createElement('p');
     errorMessagesEl.className = 'errors';
 
-var userInfoEl = document.createElement('h3');
-    var userLoggedIn;
-    userInfoEl.className = 'user-info';
+var usernameEl = document.createElement('h3');
+    usernameEl.className = 'username-info';
+
+var userHighScoreEl = document.createElement('h3');
+    userHighScoreEl.className = 'high-score-info';
+
+const viewHighScoresEl = document.createElement('a');
+    viewHighScoresEl.className = 'view-high-scores';
+    viewHighScoresEl.textContent = 'View global high scores';    
+
+const logOutEl = document.createElement('a');
+    logOutEl.className = 'log-out';
+    logOutEl.textContent = 'Log out';
+
+const returnToQuizEl = document.createElement('a');
+    returnToQuizEl.className = 'return-to-quiz';
+    returnToQuizEl.textContent = 'Return to quiz'; 
+
+var subheaderLeftWrapper = document.createElement('div');
+    subheaderLeftWrapper.className = 'subheader-left-wrapper';
 
 var timerEl = document.createElement('h3');
     const TIME_ALLOWED = 120;
@@ -160,8 +174,8 @@ var timerEl = document.createElement('h3');
     var timeLeft;
     timerEl.className = 'timer';
 
-var subheaderEl = document.createElement('div');
-    subheaderEl.className = 'subheader';
+var subheaderAllWrapper = document.createElement('div');
+    subheaderAllWrapper.className = 'subheader-all-wrapper';
 
 const preQuizInfoEl = document.createElement('p');
     preQuizInfoEl.className = 'start-quiz-info';
@@ -181,6 +195,9 @@ const preQuizWrapper = document.createElement('div');
     preQuizWrapper.className = 'pre-quiz-wrapper';
     preQuizWrapper.appendChild(preQuizInfoEl);
     preQuizWrapper.appendChild(startQuizBtn);
+
+var globalHighScoresWrapper = document.createElement('div');
+    globalHighScoresWrapper.className = 'global-high-scores-wrapper';
 
 var questionCounterEl = document.createElement('h5');
     questionCounterEl.className = 'question-counter';
@@ -226,9 +243,13 @@ const quizOverWrapper = document.createElement('div');
 //FUNCTIONS
 
     //SCREENS
-        function showUserTypeScreen(){
+        function showUserTypeScreen(justLoggedOut){
             pageClear();
 
+            if (justLoggedOut)
+                pageContent.appendChild(justLoggedOutEl);
+
+            pageContent.appendChild(welcomeText);
             pageContent.appendChild(newUserBtn);
             pageContent.appendChild(returningUserBtn);
         }
@@ -280,17 +301,97 @@ const quizOverWrapper = document.createElement('div');
             resetTimer();
 
             refreshTimeLeft();
-            
-            subheaderEl.appendChild(userInfoEl);
-            subheaderEl.appendChild(timerEl);
 
-            pageContent.appendChild(subheaderEl);
+            subheaderLeftWrapper.innerHTML = '';
+            subheaderLeftWrapper.appendChild(usernameEl);
+            subheaderLeftWrapper.appendChild(userHighScoreEl);
+            subheaderLeftWrapper.appendChild(viewHighScoresEl);
+            subheaderLeftWrapper.appendChild(logOutEl);
+            
+            subheaderAllWrapper.appendChild(subheaderLeftWrapper);
+            subheaderAllWrapper.appendChild(timerEl);
+
+            pageContent.appendChild(subheaderAllWrapper);
             pageContent.appendChild(preQuizWrapper);
+        }
+
+
+        function showHighScoresScreen(){
+            function rankedHighScoresHTML(){             
+                const MAX_NUM_HIGH_SCORES = 10;
+                var output = ["<h3 class='global-high-scores-title'>", 'Global high scores', '</h3>', "<ul class='global-high-scores-list'>"];
+                const OUTPUT_NUM_INITIAL_ELEMS = output.length;
+                const OUTPUT_TITLE_INDEX = 1;
+                var highestScoreSoFar = TIME_ALLOWED;
+
+                const lowestHighScore = users.reduce(function(prevUser, currentUser){
+                    return currentUser.highScore < prevUser.highScore ? currentUser : prevUser;
+                }).highScore;
+
+                while (!(highestScoreSoFar === lowestHighScore)){
+                    if (output.length === (OUTPUT_NUM_INITIAL_ELEMS + MAX_NUM_HIGH_SCORES)){
+                        output[OUTPUT_TITLE_INDEX] = "Top 10 global high scores";
+                        break;
+                    }
+                    
+                    var thisHighScore = 0;
+                    var thisHighScoreUsernames = [];
+
+                    for (i = 0; i < users.length; i++){
+                        if (users[i].highScore < highestScoreSoFar){
+                            if (users[i].highScore > thisHighScore){
+                                thisHighScoreUsernames = [users[i].username];
+                                thisHighScore = users[i].highScore;
+                            }
+                            else if (users[i].highScore === thisHighScore){
+                                if (typeof thisHighScoreUsernames === 'object'){
+                                    if (thisHighScoreUsernames.length < 3) //three usernames max per given high score value
+                                        thisHighScoreUsernames.push(users[i].username);
+                                    else
+                                        thisHighScoreUsernames = thisHighScoreUsernames.join(', ') + '…';
+                                }
+                            }
+                        }
+                    }
+
+                    if (thisHighScoreUsernames.length === 0 && output.length === OUTPUT_NUM_INITIAL_ELEMS){ //this handles if ALL USERS have a high score of 0
+                        output[OUTPUT_NUM_INITIAL_ELEMS - 1] = "<p class='global-high-scores-list-empty'>There are no high scores to show at this time.<br/>Check back here soon for updates!</p>";
+                        return output;
+                    }
+
+                    if (thisHighScore === 0)
+                        break;
+
+                    if (typeof thisHighScoreUsernames === 'object')
+                        thisHighScoreUsernames = thisHighScoreUsernames.join(', ');
+                    
+                    highestScoreSoFar = thisHighScore;
+
+                    output.push('<li class=><span>' + thisHighScore + '</span>: ' + thisHighScoreUsernames + '</li>');
+                }
+
+                output.push('</ul>');
+                return output;
+            }
+
+            //IMHERE
+
+            subheaderAllWrapper.innerHTML = '';
+            subheaderLeftWrapper.removeChild(viewHighScoresEl);
+            pageContent.removeChild(preQuizWrapper);
+
+            globalHighScoresWrapper.innerHTML = rankedHighScoresHTML().join('');
+
+            subheaderLeftWrapper.appendChild(returnToQuizEl);
+            subheaderLeftWrapper.appendChild(logOutEl); //this was already on the page, but re-appending it ensures that it appears AFTER returnToQuizEl
+            subheaderAllWrapper.appendChild(subheaderLeftWrapper);
+            pageContent.appendChild(globalHighScoresWrapper);
         }
 
 
         function showQuizScreen(){
             pageContent.removeChild(preQuizWrapper);
+            subheaderLeftWrapper.removeChild(viewHighScoresEl);
 
             pageContent.appendChild(quizWrapper);
 
@@ -321,17 +422,18 @@ const quizOverWrapper = document.createElement('div');
 
 
         function showQuizOverScreen(){
-            console.log(showQuizOverScreen);
-            subheaderEl.removeChild(timerEl);
+            subheaderAllWrapper.removeChild(timerEl);
             pageContent.removeChild(quizWrapper);
+            subheaderLeftWrapper.appendChild(viewHighScoresEl);
+            subheaderLeftWrapper.appendChild(logOutEl); //this was already on the page, but re-appending it ensures that it appears AFTER viewHighScoresEl
 
             if (timeLeft === 0)
                 quizOverText.innerHTML = '<span>You did not finish the quiz in time</span><br/>Better luck next time!';
             else{
                 quizOverText.innerHTML = '<span>You finished the quiz!<span><br/>'
-                if (currentUser.setHighScore(timeLeft)){
-                    quizOverText.innerHTML += 'You have set a personal high score of <span>' + timeLeft + '</span>!'
-                    setCurrentUser(currentUser); //updates high score as part of userInfoEl
+                if (setHighScore(timeLeft)){
+                    quizOverText.innerHTML += 'You set a personal high score of <span>' + timeLeft + '</span>!'
+                    setCurrentUserIndex(currentUserIndex); //updates high score as part of userHighScoreEl
                 }
                 else
                     quizOverText.innerHTML += 'Your final score is <span>' + timeLeft;
@@ -388,7 +490,7 @@ const quizOverWrapper = document.createElement('div');
                     && user.username === users[i].username
                     && user.password === users[i].password
                 )
-                    return users[i]; //this ensures that the user's high score gets properly loaded upon login
+                    return i;
             
             return false;
         }
@@ -448,9 +550,10 @@ const quizOverWrapper = document.createElement('div');
         }
 
 
-        function setCurrentUser(user){
-            currentUser = user;
-            userInfoEl.innerHTML = 'Welcome, <em>' + currentUser.username + '</em><br/>' + 'Your high score: ' + currentUser.highScore;
+        function setCurrentUserIndex(index){
+            currentUserIndex = index;
+            usernameEl.innerHTML = 'Welcome, <em>' + users[currentUserIndex].username + '</em>';
+            userHighScoreEl.textContent = 'Your high score: ' + users[currentUserIndex].highScore;
         }
 
 
@@ -526,6 +629,16 @@ const quizOverWrapper = document.createElement('div');
                 qsRandOrder = randomizeOrder(qsRandOrder);
         }
 
+        function setHighScore(newScore){
+            if (newScore > users[currentUserIndex].highScore){
+                users[currentUserIndex].highScore = newScore;
+                saveUsers();
+                return true;
+            }
+    
+            return false;
+        }
+
 
 
 //LISTENERS
@@ -569,22 +682,36 @@ loginSubmitBtn.addEventListener('click', function(event){
             }
             else{
                 saveUsers(submittedUser);
-                setCurrentUser(submittedUser);
+                setCurrentUserIndex(users.length - 1);
                 showPreQuizScreen();
             }
         }else if (formID === returningUserForm.id){
-            submittedUser = doesUserAlreadyExist(submittedUser, formID);
-            if(submittedUser){
-                setCurrentUser(submittedUser);
-                showPreQuizScreen();
-            }
-            else{
+            submittedUserStoredIndex = doesUserAlreadyExist(submittedUser, formID);
+            
+            if(submittedUserStoredIndex === false){
                 errorMessagesEl.textContent = 'Invalid username/password combination'; //Animate this so it fades away?
                 pageContent.appendChild(errorMessagesEl);
+                
+            }
+            else{
+                setCurrentUserIndex(submittedUserStoredIndex);
+                showPreQuizScreen();
             }
         }
     }
 });
+
+
+viewHighScoresEl.addEventListener('click', showHighScoresScreen);
+
+
+logOutEl.addEventListener('click', function(){
+    stopQuizTimer();
+    showUserTypeScreen();
+});
+
+
+returnToQuizEl.addEventListener('click', showPreQuizScreen);
 
 
 startQuizBtn.addEventListener('click', function(){
@@ -625,4 +752,5 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-showUserTypeScreen();
+    setCurrentUserIndex(0);
+    showPreQuizScreen();
