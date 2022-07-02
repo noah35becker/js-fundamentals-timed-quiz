@@ -232,12 +232,16 @@ var choicesWrapper = document.createElement('div');
 
 var choiceElTemplate = document.createElement('button'); //to be cloned later
     choiceElTemplate.classList.add('btn', 'choice-btn');
+
+var questionCorrectEl = document.createElement('h4');
+    questionCorrectEl.className = 'question-correct';
     
 const quizWrapper = document.createElement('div');
     quizWrapper.className = 'quiz-wrapper';
     quizWrapper.appendChild(questionCounterEl);
     quizWrapper.appendChild(questionTextEl);
     quizWrapper.appendChild(choicesWrapper);
+    quizWrapper.appendChild(questionCorrectEl);
     
 var quizOverText = document.createElement('h4');
     quizOverText.className = 'quiz-end-text';
@@ -814,8 +818,15 @@ function choiceBtnListener(){
             stopQuizTimer();
             showQuizOverScreen();
         }
-        else
+        else{
+            questionCorrectEl.textContent = 'Correct!'
+            questionCorrectEl.style.opacity = 1;
+            setTimeout(function(){
+                questionCorrectEl.style.opacity = 0;
+            }, 1300);
+
             showCurrentQuestion();
+        }
     }
     else{
         timeLeft -= TIME_PENALTY;
@@ -839,6 +850,6 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-    // setCurrentUserIndex(0);
-    // showPreQuizScreen();
-    showUserTypeScreen();
+    setCurrentUserIndex(0);
+    showPreQuizScreen();
+    // showUserTypeScreen();
