@@ -90,15 +90,20 @@ const returningUserBtn = document.createElement('button');
     returningUserBtn.textContent = 'Returning user';
     returningUserBtn.classList.add('btn', 'login-btn');
 
+const userTypeBtnsWrapper = document.createElement('div');
+    userTypeBtnsWrapper.className = 'user-type-btns-wrapper';
+    userTypeBtnsWrapper.appendChild(newUserBtn);
+    userTypeBtnsWrapper.appendChild(returningUserBtn);
+
 const newUserForm = document.createElement('form');
     newUserForm.id = 'new-user-form';
     newUserForm.className = 'login-form';
-    newUserForm.textContent = 'Enter new user info';
+    newUserForm.innerHTML = '<h4 class="form-intro-text">Enter new user info</h4>';
 
 const returningUserForm = document.createElement('form');
     returningUserForm.id = 'returning-user-form';
     returningUserForm.className = 'login-form';
-    returningUserForm.textContent = 'Enter login info';
+    returningUserForm.innerHTML = '<h4 class="form-intro-text">Enter login info</h4>';
 
 const switchToReturningUserBtn = document.createElement('button');
     switchToReturningUserBtn.classList.add('btn', 'switch-btn');    
@@ -124,23 +129,39 @@ const passwordInput2 = document.createElement('input');
     passwordInput2.setAttribute('placeholder', 're-enter password');
 
 const showPasswordCheckbox = document.createElement('input');
+    showPasswordCheckbox.className = 'show-password-checkbox';
     showPasswordCheckbox.setAttribute('type', 'checkbox');
     showPasswordCheckbox.setAttribute('id', 'show-password');
 
 const showPasswordLabel = document.createElement('label');
+    showPasswordLabel.className = 'show-password-label';
     showPasswordLabel.setAttribute('for', 'show-password');
     showPasswordLabel.textContent = 'Show password';
 
+const showPasswordCheckboxWrapper = document.createElement('div');
+    showPasswordCheckboxWrapper.classList.add('checkbox-wrapper', 'show-password-checkbox-wrapper');
+    showPasswordCheckboxWrapper.appendChild(showPasswordCheckbox);
+    showPasswordCheckboxWrapper.appendChild(showPasswordLabel);
+
 const confirmTermsCheckbox = document.createElement('input');
+    confirmTermsCheckbox.className = 'show-password-checkbox'; 
     confirmTermsCheckbox.setAttribute('type', 'checkbox');
     confirmTermsCheckbox.setAttribute('id', 'confirm-terms')
 
 const confirmTermsLabel = document.createElement('label');
+    confirmTermsLabel.className = 'confirm-terms-label';
     confirmTermsLabel.setAttribute('for', 'confirm-terms');
     confirmTermsLabel.innerHTML =
         '<p><span>Security disclaimer:</span> I understand that this site does NOT store my username and password <em>securely</em></p>';
 
+const confirmTermsCheckboxWrapper = document.createElement('div');
+    confirmTermsCheckboxWrapper.classList.add('checkbox-wrapper', 'confirm-terms-checkbox-wrapper');
+    confirmTermsCheckboxWrapper.appendChild(confirmTermsCheckbox);
+    confirmTermsCheckboxWrapper.appendChild(confirmTermsLabel);
+
 var loginSubmitBtn = document.createElement('button');
+    loginSubmitBtn.classList.add('btn', 'login-submit-btn');
+    loginSubmitBtn.setAttribute('type', 'submit');
     // Later, set the 'form' attribute to match the given form's id
     // Later, set the textContent to either 'Register' or 'Login'
 
@@ -250,8 +271,7 @@ const quizOverWrapper = document.createElement('div');
                 pageContent.appendChild(justLoggedOutEl);
 
             pageContent.appendChild(welcomeText);
-            pageContent.appendChild(newUserBtn);
-            pageContent.appendChild(returningUserBtn);
+            pageContent.appendChild(userTypeBtnsWrapper);
         }
 
 
@@ -264,10 +284,8 @@ const quizOverWrapper = document.createElement('div');
             newUserForm.appendChild(usernameInput);
             newUserForm.appendChild(passwordInput1);
             newUserForm.appendChild(passwordInput2);
-            newUserForm.appendChild(showPasswordCheckbox);
-            newUserForm.appendChild(showPasswordLabel);
-            newUserForm.appendChild(confirmTermsCheckbox);
-            newUserForm.appendChild(confirmTermsLabel);
+            newUserForm.appendChild(showPasswordCheckboxWrapper);
+            newUserForm.appendChild(confirmTermsCheckboxWrapper);
 
             loginSubmitBtn.setAttribute('form', newUserForm.id);
             loginSubmitBtn.textContent = 'Register';
@@ -285,8 +303,7 @@ const quizOverWrapper = document.createElement('div');
 
             returningUserForm.appendChild(usernameInput);
             returningUserForm.appendChild(passwordInput1);
-            returningUserForm.appendChild(showPasswordCheckbox);
-            returningUserForm.appendChild(showPasswordLabel);
+            returningUserForm.appendChild(showPasswordCheckboxWrapper);
 
             loginSubmitBtn.setAttribute('form', returningUserForm.id);
             loginSubmitBtn.textContent = 'Login';
@@ -563,7 +580,7 @@ const quizOverWrapper = document.createElement('div');
             if (formID === newUserForm.id){
                 var password2Val = passwordInput2.value;
                 if(password2Val === '')
-                    errs.push('You must re-enter your password');
+                    errs.push('You must re-enter the password');
                 else if (!(password2Val === password1Val))
                     errs.push('The passwords do not match');
                 
