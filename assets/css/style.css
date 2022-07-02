@@ -6,6 +6,13 @@
 }
 
 
+/* UTILITY CLASSES */
+.fades{
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+
 /* GENERAL RULES */
     *{
         font-family: 'trebuchet ms', 'arial', sans-serif;
@@ -208,6 +215,7 @@
 
     .login-submit-btn{
         margin-bottom: 12px;
+        font-size: 18px;
     }
 
     .errors{
@@ -239,8 +247,6 @@
         background-image: url('..//images/show-password-icon.png');
         top: 5.8px;
     }
-
-
 
 
 /* PRE-QUIZ */
@@ -296,8 +302,6 @@
 /* QUIZ */
     .timer-penalty{
         color: darkred;
-        opacity: 0;
-        transition: opacity 1s;
     }
 
     .quiz-wrapper{
@@ -322,8 +326,6 @@
 
     .question-correct{
         color: darkgreen;
-        opacity: 0;
-        transition: opacity 1s;
     }
 
 

@@ -75,7 +75,7 @@ var quizTimer;
 var pageContent = document.querySelector('main');
 
 const justLoggedOutEl = document.createElement('h4');  
-    justLoggedOutEl.className = 'just-logged-out';
+    justLoggedOutEl.classList.add('just-logged-out', 'fades');
     justLoggedOutEl.textContent = 'You have been logged out';
 
 const welcomeText = document.createElement('h3');
@@ -197,7 +197,8 @@ var timerEl = document.createElement('h3');
     timerEl.className = 'timer';
 
 var timerPenaltyMsg = document.createElement('h3');
-    timerPenaltyMsg.className = 'timer-penalty';
+    timerPenaltyMsg.classList.add('timer-penalty', 'fades');
+    timerPenaltyMsg.textContent = "—" + TIME_PENALTY;
 
 const subheaderRightWrapper = document.createElement('div');
     subheaderRightWrapper.className = 'subheader-right-wrapper';
@@ -242,7 +243,8 @@ var choiceElTemplate = document.createElement('button'); //to be cloned later
     choiceElTemplate.classList.add('btn', 'choice-btn');
 
 var questionCorrectEl = document.createElement('h4');
-    questionCorrectEl.className = 'question-correct';
+    questionCorrectEl.classList.add('question-correct', 'fades');
+    questionCorrectEl.textContent = 'Correct!'
     
 const quizWrapper = document.createElement('div');
     quizWrapper.className = 'quiz-wrapper';
@@ -280,8 +282,14 @@ const quizOverWrapper = document.createElement('div');
         function showUserTypeScreen(justLoggedOut){
             pageClear();
 
-            if (justLoggedOut)
+            if (justLoggedOut){
                 pageContent.appendChild(justLoggedOutEl);
+                justLoggedOutEl.style.opacity = 1;
+                setTimeout(function()
+                {
+                    justLoggedOutEl.style.opacity = 0;
+                }, 2000);
+            }
 
             pageContent.appendChild(welcomeText);
             pageContent.appendChild(userTypeBtnsWrapper);
@@ -776,7 +784,7 @@ loginSubmitBtn.addEventListener('click', function(event){
         
         if (formID === newUserForm.id){
             if (doesUserAlreadyExist(submittedUser, formID)){
-                errorMessagesEl.textContent = 'A user with this username already exists'; //Animate this so it fades away?
+                errorMessagesEl.textContent = 'A user with this username already exists';
                 pageContent.appendChild(errorMessagesEl);
             }
             else{
@@ -788,7 +796,7 @@ loginSubmitBtn.addEventListener('click', function(event){
             submittedUserStoredIndex = doesUserAlreadyExist(submittedUser, formID);
             
             if(submittedUserStoredIndex === false){
-                errorMessagesEl.textContent = 'Invalid username/password combination'; //Animate this so it fades away?
+                errorMessagesEl.textContent = 'Invalid username/password combination';
                 pageContent.appendChild(errorMessagesEl);
                 
             }
@@ -827,7 +835,6 @@ function choiceBtnListener(){
             showQuizOverScreen();
         }
         else{
-            questionCorrectEl.textContent = 'Correct!'
             questionCorrectEl.style.opacity = 1;
             setTimeout(function(){
                 questionCorrectEl.style.opacity = 0;
@@ -843,7 +850,6 @@ function choiceBtnListener(){
         this.append(' ❌');
         this.setAttribute('disabled', '');
         
-        timerPenaltyMsg.textContent = "—10";
         timerPenaltyMsg.style.opacity = 1;
             setTimeout(function(){
                 timerPenaltyMsg.style.opacity = 0;
