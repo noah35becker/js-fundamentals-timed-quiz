@@ -196,6 +196,14 @@ var timerEl = document.createElement('h3');
     var timeLeft;
     timerEl.className = 'timer';
 
+var timerPenaltyMsg = document.createElement('h3');
+    timerPenaltyMsg.className = 'timer-penalty';
+
+const subheaderRightWrapper = document.createElement('div');
+    subheaderRightWrapper.className = 'subheader-right-wrapper';
+    subheaderRightWrapper.appendChild(timerEl);
+    subheaderRightWrapper.appendChild(timerPenaltyMsg);
+
 var subheaderAllWrapper = document.createElement('div');
     subheaderAllWrapper.className = 'subheader-all-wrapper';
 
@@ -211,7 +219,7 @@ const preQuizInfoEl = document.createElement('p');
 
 const startQuizBtn = document.createElement('button');
     startQuizBtn.classList.add('btn', 'start-btn');
-    startQuizBtn.textContent = 'Start Quiz';
+    startQuizBtn.textContent = 'Start quiz';
 
 const preQuizWrapper = document.createElement('div');
     preQuizWrapper.className = 'pre-quiz-wrapper';
@@ -332,7 +340,7 @@ const quizOverWrapper = document.createElement('div');
             subheaderLeftWrapper.appendChild(logOutEl);
             
             subheaderAllWrapper.appendChild(subheaderLeftWrapper);
-            subheaderAllWrapper.appendChild(timerEl);
+            subheaderAllWrapper.appendChild(subheaderRightWrapper);
 
             pageContent.appendChild(subheaderAllWrapper);
             pageContent.appendChild(preQuizWrapper);
@@ -432,7 +440,7 @@ const quizOverWrapper = document.createElement('div');
             subheaderLeftWrapper.appendChild(logOutEl);
 
             subheaderAllWrapper.appendChild(subheaderLeftWrapper);
-            subheaderAllWrapper.appendChild(timerEl);
+            subheaderAllWrapper.appendChild(subheaderRightWrapper);
 
             pageContent.appendChild(subheaderAllWrapper);
             pageContent.appendChild(quizWrapper);
@@ -830,9 +838,16 @@ function choiceBtnListener(){
     }
     else{
         timeLeft -= TIME_PENALTY;
+        
         refreshTimeLeft();
         this.append(' ❌');
         this.setAttribute('disabled', '');
+        
+        timerPenaltyMsg.textContent = "—10";
+        timerPenaltyMsg.style.opacity = 1;
+            setTimeout(function(){
+                timerPenaltyMsg.style.opacity = 0;
+            }, 1300);
         //add other css restylings, e.g. making the button pink-red, giving it a thicker border
     }
 }

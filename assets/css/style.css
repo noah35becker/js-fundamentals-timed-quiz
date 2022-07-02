@@ -176,7 +176,7 @@
         margin-top: 10px;
     }
 
-    h3.timer{
+    .subheader-right-wrapper h3{
         text-align: right;
         margin-right: 30px;
     }
@@ -294,6 +294,12 @@
 
 
 /* QUIZ */
+    .timer-penalty{
+        color: darkred;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+
     .quiz-wrapper{
         width: 90%;
     }
@@ -319,6 +325,7 @@
         opacity: 0;
         transition: opacity 1s;
     }
+
 
 
 /* QUIZ END */
