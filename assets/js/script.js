@@ -152,7 +152,7 @@ const confirmTermsLabel = document.createElement('label');
     confirmTermsLabel.className = 'confirm-terms-label';
     confirmTermsLabel.setAttribute('for', 'confirm-terms');
     confirmTermsLabel.innerHTML =
-        '<p><span>Security disclaimer:</span> I understand that this site does NOT store my username and password <em>securely</em></p>';
+        '<p><span>Security disclaimer:</span> I understand that this site will NOT store my username and password <em>securely</em></p>';
 
 const confirmTermsCheckboxWrapper = document.createElement('div');
     confirmTermsCheckboxWrapper.classList.add('checkbox-wrapper', 'confirm-terms-checkbox-wrapper');
@@ -333,7 +333,7 @@ const quizOverWrapper = document.createElement('div');
 
 
         function showHighScoresScreen(){
-            function rankedHighScoresHTML(){             
+            function rankedHighScoresHTML(){      
                 const MAX_NUM_HIGH_SCORES = 10;
                 var output = ["<h3 class='global-high-scores-title'>", 'Global high scores', '</h3>', "<ul class='global-high-scores-list'>"];
                 const OUTPUT_NUM_INITIAL_ELEMS = output.length;
@@ -358,7 +358,7 @@ const quizOverWrapper = document.createElement('div');
                         if (users[i].highScore < highestScoreSoFar){
                             if (users[i].highScore > thisHighScore){
                                 if (i === currentUserIndex)
-                                    thisHighScoreUsernames = ['<span>' + users[i].username + '</span>'];
+                                    thisHighScoreUsernames = ['<span class="this-user">' + users[i].username + '</span>'];
                                 else
                                     thisHighScoreUsernames = [users[i].username];
                                 thisHighScore = users[i].highScore;
@@ -367,7 +367,7 @@ const quizOverWrapper = document.createElement('div');
                                 if (typeof thisHighScoreUsernames === 'object'){
                                     if (thisHighScoreUsernames.length < MAX_USERS_PER_HIGH_SCORE){
                                         if (i === currentUserIndex)
-                                            thisHighScoreUsernames.push('<span>' + users[i].username + '</span>');
+                                            thisHighScoreUsernames.push('<span class="this-user">' + users[i].username + '</span>');
                                         else
                                             thisHighScoreUsernames.push(users[i].username);
                                     }
@@ -378,7 +378,7 @@ const quizOverWrapper = document.createElement('div');
                         }
                     }
 
-                    if (thisHighScoreUsernames.length === 0 && output.length === OUTPUT_NUM_INITIAL_ELEMS){ //this handles if ALL USERS have a high score of 0
+                    if (thisHighScore === 0 && output.length === OUTPUT_NUM_INITIAL_ELEMS){ //this handles if ALL USERS have a high score of 0
                         output[OUTPUT_NUM_INITIAL_ELEMS - 1] = "<p class='global-high-scores-list-empty'>There are no high scores to show at this time.<br/>Check back here soon for updates!</p>";
                         return output;
                     }
@@ -391,7 +391,7 @@ const quizOverWrapper = document.createElement('div');
                     
                     highestScoreSoFar = thisHighScore;
 
-                    output.push('<li class=><span>' + thisHighScore + '</span>: ' + thisHighScoreUsernames + '</li>');
+                    output.push('<li class=><span>' + thisHighScore + '</span> — ' + thisHighScoreUsernames + '</li>');
                 }
 
                 output.push('</ul>');
@@ -796,4 +796,6 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-    showUserTypeScreen();
+    setCurrentUserIndex(0);
+    showPreQuizScreen();
+    // showUserTypeScreen();

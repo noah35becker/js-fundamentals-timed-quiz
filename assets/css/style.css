@@ -49,16 +49,33 @@
         padding: 20px 0;
     }
 
+    h5{
+        font-size: 20px;
+        margin: 0;
+    }
+
     p{
         margin: 0;
+        line-height: 1.5;
+    }
+
+    a{
+        transition: .1s;
+        cursor: default;
+        color: var(--button-txt-color);
+        text-decoration: underline var(--button-txt-color);
+    }
+    a:hover{
+        opacity: .6;
     }
 
     main{
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: top;
         align-items: center;
+        padding-top: 30px;
     }
 
     .btn{
@@ -78,6 +95,12 @@
         background-color: var(--button-txt-color);
         color: var(--button-bg-color);
         border-color: var(--button-bg-color);
+    }
+    
+    .btn[disabled]{
+        color: darkgray;
+        background-color: lightgrey;
+        border-color: darkgray;
     }
 
     form{
@@ -115,12 +138,48 @@
         text-align: left;
     }
 
+    
 
 
-/* USER TYPE SCREEN */
-    /* .welcome-text{
-        margin-top: -27vh;
-    } */
+
+/* SUBHEADER */
+    .subheader-all-wrapper{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .subheader-all-wrapper h3{
+        font-size: 19px;
+        margin: 4px 0;
+        font-weight: normal;
+        padding: 0;
+    }
+
+    .subheader-left-wrapper{
+        text-align: left;
+        margin-left: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .subheader-left-wrapper a{
+        margin: 5px 0;
+    }
+    .subheader-left-wrapper a:first-of-type{
+        margin-top: 10px;
+    }
+
+    h3.timer{
+        text-align: right;
+        margin-right: 30px;
+    }
+
+
+
+
 
 
 /* LOGIN FORMS */
@@ -141,6 +200,98 @@
     .login-submit-btn{
         margin-bottom: 25px;
     }
+
+    .errors{
+        color: darkred;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+
+/* PRE-QUIZ */
+    .pre-quiz-wrapper{
+        width: 80%;
+    }
+
+    .start-quiz-info{
+        font-size: 20px;
+        margin-top: 15px;;
+        margin-bottom: 30px;;
+    }
+
+    .start-quiz-info br{
+        height: 5px !important;
+    }
+
+
+/* GLOBAL HIGH SCORES */
+    .global-high-scores-title{
+        padding: 0;
+        text-decoration: underline black;
+    }
+
+    .global-high-scores-list{
+        list-style: none;
+        padding: 0;
+    }
+
+    .global-high-scores-list li{
+        text-align: left;
+        margin: 8px 0;
+        font-size: 18px;
+    }
+
+    .global-high-scores-list li span{
+        font-weight: bolder;
+    }
+
+    .global-high-scores-list li span.this-user{
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    .global-high-scores-list-empty{
+        padding-top: 25px;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+
+
+/* QUIZ */
+    .quiz-wrapper{
+        width: 90%;
+    }
+
+    .question-text{
+        padding-top: 30px;
+        padding-bottom: 25px;
+    }
+
+    .choices-wrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .choice-btn{
+        min-width: 500px;
+        text-align: left;
+    }
+
+
+/* QUIZ END */
+    .quiz-end-text{
+        font-weight: normal;
+        line-height: 1.5;
+        padding-bottom: 35px;
+    }
+
+    .quiz-end-text span{
+        font-weight: bolder;
+    }
+
+
 
 
 
