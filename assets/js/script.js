@@ -167,6 +167,7 @@ var loginSubmitBtn = document.createElement('button');
 
 var errorMessagesEl = document.createElement('p');
     errorMessagesEl.className = 'errors';
+    var invalidFields = [];
 
 var usernameEl = document.createElement('h3');
     usernameEl.className = 'username-info';
@@ -477,7 +478,7 @@ const quizOverWrapper = document.createElement('div');
                     setCurrentUserIndex(currentUserIndex); //updates high score as part of userHighScoreEl
                 }
                 else
-                    quizOverText.innerHTML += 'Your final score is <span>' + timeLeft;
+                    quizOverText.innerHTML += 'Your final score is <span>' + timeLeft + '</span>';
             }
 
             pageContent.appendChild(quizOverWrapper);
@@ -548,49 +549,87 @@ const quizOverWrapper = document.createElement('div');
             }
 
             var errs = [];
+            invalidFields = [];
             var usernameVal = usernameInput.value;
             var password1Val = passwordInput1.value;
 
-            if(usernameVal === '')
+            if(usernameVal === ''){
                 errs.push('Please enter a username');
+                invalidFields.push(usernameInput);
+            }
             else{
-                if (usernameVal.length < 8)
+                if (usernameVal.length < 8){
                     errs.push('Username must be at least 8 characters long');
-                else if (usernameVal.length > 30)
+                    invalidFields.push(usernameInput);
+                }
+                else if (usernameVal.length > 30){
                     errs.push('Username must be no longer than 30 characters');
+                    invalidFields.push(usernameInput);
+                }
                 
                 var badChars = ineligibleCharsString(usernameVal, 'alpha', 'numeric');
-                if (badChars)
+                if (badChars){
                     errs.push('Username contains invalid characters: ' + badChars);
+                    invalidFields.push(usernameInput);
+                }
             }
 
-            if(password1Val === '')
+            if(password1Val === ''){
                 errs.push('Please enter a password');
+                invalidFields.push(passwordInput1, passwordInput2);
+            }
             else{
-                if (password1Val.length < 8)
+                if (password1Val.length < 8){
                     errs.push('Password must be at least 8 characters long');
-                else if (password1Val.length > 30)
+                    invalidFields.push(passwordInput1, passwordInput2);
+                }
+                else if (password1Val.length > 30){
                     errs.push('Password must be no longer than 30 characters');
+                    invalidFields.push(passwordInput1, passwordInput2);
+                }
                 
                 var badChars = ineligibleCharsString(password1Val, 'alpha', 'numeric', 'special');
-                    if (badChars)
+                    if (badChars){
                         errs.push('Password contains invalid characters: ' + badChars);
+                        invalidFields.push(passwordInput1, passwordInput2);
+                    }
             }
 
             if (formID === newUserForm.id){
                 var password2Val = passwordInput2.value;
-                if(password2Val === '')
+
+                if(password2Val === ''){
                     errs.push('You must re-enter the password');
-                else if (!(password2Val === password1Val))
+                    invalidFields.push(passwordInput2);
+                }
+                else if (!(password2Val === password1Val)){
                     errs.push('The passwords do not match');
+                    invalidFields.push(passwordInput1, passwordInput2);
+                }
                 
-                if (!confirmTermsCheckbox.checked)
+                if (!confirmTermsCheckbox.checked){
                     errs.push('You must confirm that you understand the security disclaimer');
+                    invalidFields.push(confirmTermsCheckboxWrapper);
+                }
             }
 
             if (errs.length > 0)
                 return errs;
             return false;
+        }
+
+
+        function invalidFieldsMakeRed(){
+            invalidFields.forEach(elem => {
+                elem.style.outline = '3px solid ' + window.getComputedStyle(errorMessagesEl).getPropertyValue('color');
+            });
+        }
+
+
+        function invalidFieldsReset(){
+            invalidFields.forEach(elem => {
+                elem.style.outline = 'none';
+            });
         }
 
 
@@ -708,6 +747,7 @@ loginSubmitBtn.addEventListener('click', function(event){
     event.preventDefault();
     
     errorMessagesEl.remove();
+    invalidFieldsReset();
 
     var formID = this.getAttribute('form');
     var userErrors = loginErrors(formID);
@@ -715,6 +755,7 @@ loginSubmitBtn.addEventListener('click', function(event){
     if (userErrors){
         errorMessagesEl.innerHTML = userErrors.join('<br/>');
         pageContent.appendChild(errorMessagesEl);
+        invalidFieldsMakeRed();
     }
     else{
         var submittedUser = new User(usernameInput.value, passwordInput1.value);
@@ -796,6 +837,6 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-    setCurrentUserIndex(0);
-    showPreQuizScreen();
-    // showUserTypeScreen();
+    // setCurrentUserIndex(0);
+    // showPreQuizScreen();
+    showUserTypeScreen();

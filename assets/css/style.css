@@ -10,6 +10,7 @@
     *{
         font-family: 'trebuchet ms', 'arial', sans-serif;
         text-align: center;
+        outline-offset: 1px;
     }
 
     body{
@@ -189,8 +190,13 @@
         padding-bottom: 10px;
     }
 
+    .confirm-terms-checkbox-wrapper{
+        width: 50%;
+        border-radius: 5px;
+    }
+
     .confirm-terms-label{
-        flex-basis: 35%;
+        flex-basis: 70%;
     }
 
     .confirm-terms-label span{
@@ -198,7 +204,7 @@
     }
 
     .login-submit-btn{
-        margin-bottom: 25px;
+        margin-bottom: 12px;
     }
 
     .errors{
