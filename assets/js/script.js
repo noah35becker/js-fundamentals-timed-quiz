@@ -136,7 +136,7 @@ const showPasswordCheckbox = document.createElement('input');
 const showPasswordLabel = document.createElement('label');
     showPasswordLabel.className = 'show-password-label';
     showPasswordLabel.setAttribute('for', 'show-password');
-    showPasswordLabel.textContent = 'Show password';
+    showPasswordLabel.textContent = 'Show/hide password';
 
 const showPasswordCheckboxWrapper = document.createElement('div');
     showPasswordCheckboxWrapper.classList.add('checkbox-wrapper', 'show-password-checkbox-wrapper');
@@ -144,7 +144,7 @@ const showPasswordCheckboxWrapper = document.createElement('div');
     showPasswordCheckboxWrapper.appendChild(showPasswordLabel);
 
 const confirmTermsCheckbox = document.createElement('input');
-    confirmTermsCheckbox.className = 'show-password-checkbox'; 
+    confirmTermsCheckbox.className = 'confirm-terms-checkbox'; 
     confirmTermsCheckbox.setAttribute('type', 'checkbox');
     confirmTermsCheckbox.setAttribute('id', 'confirm-terms')
 
@@ -279,6 +279,7 @@ const quizOverWrapper = document.createElement('div');
         function showNewUserScreen(){
             pageClear();
             resetForms();
+            invalidFieldsReset();
 
             pageContent.appendChild(switchToReturningUserBtn);
 
@@ -299,6 +300,7 @@ const quizOverWrapper = document.createElement('div');
         function showReturningUserScreen(){
             pageClear();
             resetForms();
+            invalidFieldsReset();
 
             pageContent.appendChild(switchToNewUserBtn);
 
