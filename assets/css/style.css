@@ -322,6 +322,9 @@
     .timer-penalty{
         color: darkred;
     }
+    .timer-penalty span{
+        font-family: 'Courier New', Courier, monospace;
+    }
 
     .quiz-wrapper{
         width: 90%;

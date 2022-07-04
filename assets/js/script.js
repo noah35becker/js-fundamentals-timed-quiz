@@ -62,7 +62,7 @@ const QUESTIONS = [
         new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
     ),
     new Question("#5 - What's the right answer?",
-        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+        new Choice('right answer', true), new Choice('text text'), new Choice('more text')
     )
 ];
 var qsRandOrder; //contains the same content as QUESTIONS, but w the order of questions and their choices randomized
@@ -198,7 +198,7 @@ var timerEl = document.createElement('h3');
 
 var timerPenaltyMsg = document.createElement('h3');
     timerPenaltyMsg.classList.add('timer-penalty', 'fades');
-    timerPenaltyMsg.textContent = "—" + TIME_PENALTY;
+    timerPenaltyMsg.innerHTML = '<span>–</span>' + TIME_PENALTY;
 
 const subheaderRightWrapper = document.createElement('div');
     subheaderRightWrapper.className = 'subheader-right-wrapper';
