@@ -358,7 +358,7 @@ const quizOverWrapper = document.createElement('div');
         function showHighScoresScreen(){
             function rankedHighScoresHTML(){      
                 const MAX_NUM_HIGH_SCORES = 10;
-                var output = ["<h3 class='global-high-scores-title'>", 'Global high scores', '</h3>', "<ul class='global-high-scores-list'>"];
+                var output = ["<h3 class='global-high-scores-title'>", 'Global high scores', '</h3>', "<ol class='global-high-scores-list'>"];
                 const OUTPUT_NUM_INITIAL_ELEMS = output.length;
                 const OUTPUT_TITLE_INDEX = 1;
                 const MAX_USERS_PER_HIGH_SCORE = 3;
@@ -401,13 +401,14 @@ const quizOverWrapper = document.createElement('div');
                         }
                     }
 
-                    if (thisHighScore === 0 && output.length === OUTPUT_NUM_INITIAL_ELEMS){ //this handles if ALL USERS have a high score of 0
-                        output[OUTPUT_NUM_INITIAL_ELEMS - 1] = "<p class='global-high-scores-list-empty'>There are no high scores to show at this time.<br/>Check back here soon for updates!</p>";
-                        return output;
+                    if (thisHighScore === 0){
+                        if (output.length === OUTPUT_NUM_INITIAL_ELEMS){ //this handles if ALL USERS have a high score of 0
+                            output[OUTPUT_NUM_INITIAL_ELEMS - 1] = "<p class='global-high-scores-list-empty'>There are no high scores to show at this time.<br/>Check back here soon for updates!</p>";
+                            return output;
+                        }
+                        else
+                            break;
                     }
-
-                    if (thisHighScore === 0)
-                        break;
 
                     if (typeof thisHighScoreUsernames === 'object')
                         thisHighScoreUsernames = thisHighScoreUsernames.join(', ');
@@ -417,7 +418,7 @@ const quizOverWrapper = document.createElement('div');
                     output.push('<li class=><span>' + thisHighScore + '</span> — ' + thisHighScoreUsernames + '</li>');
                 }
 
-                output.push('</ul>');
+                output.push('</ol>');
                 return output;
             }
 
@@ -871,6 +872,6 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-    setCurrentUserIndex(0);
+    setCurrentUserIndex(4);
     showPreQuizScreen();
     // showUserTypeScreen();

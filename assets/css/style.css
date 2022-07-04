@@ -1,8 +1,10 @@
 
 /* VARIABLES */
 :root{
-    --button-bg-color: rgb(215, 146, 106);
-    --button-txt-color: rgb(24, 0, 178);
+    /* --button-bg-color: rgb(215, 146, 106);
+    --button-txt-color: rgb(24, 0, 178); */
+    --button-bg-color: rgb(255, 202, 110);
+    --button-txt-color: rgb(0, 98, 245);
 }
 
 
