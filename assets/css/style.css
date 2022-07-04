@@ -319,12 +319,19 @@
 
 
 /* QUIZ */
-    .timer-penalty{
+    .timer span{
+        font-weight: bold;
+    }
+
+    h3.timer-penalty{
         color: darkred;
+        font-weight: bold;
     }
     .timer-penalty span{
         font-family: 'Courier New', Courier, monospace;
     }
+
+    
 
     .quiz-wrapper{
         width: 90%;
@@ -343,7 +350,7 @@
 
     .choice-btn{
         min-width: 500px;
-        text-align: left;
+        text-align: center;
     }
 
     .question-correct{

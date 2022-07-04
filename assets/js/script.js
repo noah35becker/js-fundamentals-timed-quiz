@@ -49,23 +49,78 @@ var currentUserIndex;
 
 //QUIZ
 const QUESTIONS = [
-    new Question("#1 - What's the right answer?",
-        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    new Question( //1
+        'Which of the following is NOT a falsy value?',
+        new Choice('[]', true),
+        new Choice('0'),
+        new Choice('null'),
+        new Choice('"" (an empty string)')
     ),
-    new Question("#2 - What's the right answer?",
-        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    new Question( //2
+        "Which of the following would assign class 'btn' to the myButton element?",
+        new Choice("myButton.className = 'btn';", true),
+        new Choice("myButton.classname = 'btn';"),
+        new Choice("myButton.class.add('btn');"),
+        new Choice("myButton.class = 'btn';")
     ),
-    new Question("#3 - What's the right answer?",
-        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    new Question( //3
+        "Element parentEl contains the element childEl. How do you change the text of childEl to 'new text'?",
+        new Choice("childEl.textContent = 'new text';", true),
+        new Choice("parentEl.childEl.textContent = 'new text';"),
+        new Choice("childEl.setText('new text');"),
+        new Choice("parentEl.getElement('childEl').textContent = 'new text';")
     ),
-    new Question("#4 - What's the right answer?",
-        new Choice('right answer', true), new Choice('text text'), new Choice('more text'), new Choice('still more text')
+    new Question( //4
+        'When working with Strings, what is "character escaping"?',
+        new Choice('Using a backslash, \\, to enable the use of certain otherwise-forbidden characters inside of Strings', true),
+        new Choice("Using your keyboard's escape key when you run into trouble with text input"),
+        new Choice('Breaking a String into its individual characters'),
+        new Choice('Avoiding the use of characters in general')
     ),
-    new Question("#5 - What's the right answer?",
-        new Choice('right answer', true), new Choice('text text'), new Choice('more text')
+    new Question( //5
+        'What is the difference between .textContent and .innerHTML?',
+        new Choice(".textContent refers to an element's text, while .innerHTML refers to an element's text AND the child HTML contained within the element", true),
+        new Choice('They are completely identical'),
+        new Choice('.textContent creates a "demo" of a change to an element\'s text, while .innerHTML is how you actually lock in those changes'),
+        new Choice('.textContent is a property, while .innerHTML is a function')
+    ),
+    new Question( //6
+        "typeof ['sample', 'array']; will return which of the following?",
+        new Choice('object', true),
+        new Choice('string'),
+        new Choice('null'),
+        new Choice('array')
+    ),
+    new Question( //7
+        'For executing a block of code ONLY ONCE after a given time delay, which is the appropriate function to use?',
+        new Choice('setTimeout', true),
+        new Choice('setInterval'),
+        new Choice('delayEvent'),
+        new Choice('setTimer')
+    ),
+    new Question( //8
+        'sampleArray is an array of length 5. Which of the following for-loops will iterate exactly 5 times?',
+        new Choice('for (i = 0; i < sampleArray.length; i++)', true),
+        new Choice('for (i = 0; i <= sampleArray.length; i++)'),
+        new Choice('for (i = 0; i === sampleArray.length; i++)'),
+        new Choice('for (i = 0; sampleArray.length; i++)')
+    ),
+    new Question( //9
+        'Which of the following does NOT add "newItem" to the end of "array"?',
+        new Choice('array += newItem;', true),
+        new Choice('array.push(newItem);'),
+        new Choice('array[array.length] = newItem;'),
+        new Choice('array = [...array, newItem];')
+    ),
+    new Question( //10
+        'Variable x is equal to 0. Which of the following will return false?',
+        new Choice('x;', true),
+        new Choice('x === 0;'),
+        new Choice('!x;'),
+        new Choice('x ? false : true;')
     )
 ];
-var qsRandOrder; //contains the same content as QUESTIONS, but w the order of questions and their choices randomized
+var qsRandOrder; //contains the same content as QUESTIONS, but w/ the order of questions and their choices randomized
 var currentQIndex;
 var quizTimer;
 
@@ -191,7 +246,8 @@ var subheaderLeftWrapper = document.createElement('div');
     subheaderLeftWrapper.className = 'subheader-left-wrapper';
 
 var timerEl = document.createElement('h3');
-    const TIME_ALLOWED = 120;
+    const SECS_PER_QUESTION = 20;
+    const TIME_ALLOWED = SECS_PER_QUESTION * QUESTIONS.length;
     const TIME_PENALTY = 10;
     var timeLeft;
     timerEl.className = 'timer';
@@ -211,7 +267,9 @@ var subheaderAllWrapper = document.createElement('div');
 const preQuizInfoEl = document.createElement('p');
     preQuizInfoEl.className = 'start-quiz-info';
     preQuizInfoEl.innerHTML =
-        'Try to answer the following Javascript-related questions within the '
+        'Try to answer the following '
+        + QUESTIONS.length
+        + ' Javascript-related questions within the '
         + TIME_ALLOWED
         + '-second time limit.<br/>A wrong answer will penalize your time by '
         + TIME_PENALTY
@@ -701,7 +759,7 @@ const quizOverWrapper = document.createElement('div');
             if (timeLeft < 0)
                 timeLeft = 0;
             
-            timerEl.textContent = 'Time remaining: ' + timeLeft;
+            timerEl.innerHTML = 'Time remaining: <span>' + timeLeft + '</span>';
 
             if (timeLeft === 0){
                 stopQuizTimer();
@@ -871,5 +929,4 @@ quitBtn.addEventListener('click', function(){
 
 
 //INITIALIZE PAGE
-//TESTER CONDIITIONS FOR NOW
     showUserTypeScreen();
