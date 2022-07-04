@@ -207,7 +207,7 @@ const confirmTermsLabel = document.createElement('label');
     confirmTermsLabel.className = 'confirm-terms-label';
     confirmTermsLabel.setAttribute('for', 'confirm-terms');
     confirmTermsLabel.innerHTML =
-        "<p><span>Data storage disclaimer:</span> I understand that this site will NOT store my username and password <em>securely</em>, and that all data will be stored only on the device I'm currently using.</p>";
+        "<p><span>Data storage disclaimer:</span> I understand that this site will NOT store my username and password <em>securely</em>, and that all data will be stored only in the browser / on the device that I'm currently using.</p>";
 
 const confirmTermsCheckboxWrapper = document.createElement('div');
     confirmTermsCheckboxWrapper.classList.add('checkbox-wrapper', 'confirm-terms-checkbox-wrapper');
