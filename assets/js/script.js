@@ -152,7 +152,7 @@ const confirmTermsLabel = document.createElement('label');
     confirmTermsLabel.className = 'confirm-terms-label';
     confirmTermsLabel.setAttribute('for', 'confirm-terms');
     confirmTermsLabel.innerHTML =
-        '<p><span>Security disclaimer:</span> I understand that this site will NOT store my username and password <em>securely</em></p>';
+        "<p><span>Data storage disclaimer:</span> I understand that this site will NOT store my username and password <em>securely</em>, and that all data will be stored only on the device I'm currently using.</p>";
 
 const confirmTermsCheckboxWrapper = document.createElement('div');
     confirmTermsCheckboxWrapper.classList.add('checkbox-wrapper', 'confirm-terms-checkbox-wrapper');
@@ -631,7 +631,7 @@ const quizOverWrapper = document.createElement('div');
                 }
                 
                 if (!confirmTermsCheckbox.checked){
-                    errs.push('You must confirm that you understand the security disclaimer');
+                    errs.push('You must confirm that you understand the data storage disclaimer');
                     invalidFields.push(confirmTermsCheckboxWrapper);
                 }
             }
@@ -872,6 +872,4 @@ quitBtn.addEventListener('click', function(){
 
 //INITIALIZE PAGE
 //TESTER CONDIITIONS FOR NOW
-    setCurrentUserIndex(4);
-    showPreQuizScreen();
-    // showUserTypeScreen();
+    showUserTypeScreen();
