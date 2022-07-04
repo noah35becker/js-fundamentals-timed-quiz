@@ -271,9 +271,9 @@ const preQuizInfoEl = document.createElement('p');
         + QUESTIONS.length
         + ' Javascript-related multiple-choice questions within the '
         + TIME_ALLOWED
-        + '-second time limit.<br/>A wrong answer will penalize your time by '
+        + '-second time limit. <br/>A wrong answer will penalize your time by '
         + TIME_PENALTY
-        + ' seconds.<br/>Your final score will be equal to the time remaining at the end of your quiz.'
+        + ' seconds. <br/>Your final score will be equal to the time remaining at the end of your quiz.'
     ;
 
 const startQuizBtn = document.createElement('button');
