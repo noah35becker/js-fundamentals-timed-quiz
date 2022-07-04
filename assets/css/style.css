@@ -290,6 +290,10 @@
         text-decoration: underline black;
     }
 
+    .high-score-number{
+        font-size: 20px;
+    }
+
     .global-high-scores-list{
         list-style: none;
         padding: 0;
@@ -298,7 +302,7 @@
     .global-high-scores-list li{
         text-align: left;
         margin: 8px 0;
-        font-size: 18px;
+        font-size: 17px;
     }
 
     .global-high-scores-list li span{

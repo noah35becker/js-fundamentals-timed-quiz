@@ -269,7 +269,7 @@ const preQuizInfoEl = document.createElement('p');
     preQuizInfoEl.innerHTML =
         'Try to answer the following '
         + QUESTIONS.length
-        + ' Javascript-related questions within the '
+        + ' Javascript-related multiple-choice questions within the '
         + TIME_ALLOWED
         + '-second time limit.<br/>A wrong answer will penalize your time by '
         + TIME_PENALTY
@@ -414,7 +414,7 @@ const quizOverWrapper = document.createElement('div');
 
 
         function showHighScoresScreen(){
-            function rankedHighScoresHTML(){      
+            function rankedHighScoresHTML(){                      
                 const MAX_NUM_HIGH_SCORES = 10;
                 var output = ["<h3 class='global-high-scores-title'>", 'Global high scores', '</h3>', "<ol class='global-high-scores-list'>"];
                 const OUTPUT_NUM_INITIAL_ELEMS = output.length;
@@ -445,16 +445,10 @@ const quizOverWrapper = document.createElement('div');
                                 thisHighScore = users[i].highScore;
                             }
                             else if (users[i].highScore === thisHighScore){
-                                if (typeof thisHighScoreUsernames === 'object'){
-                                    if (thisHighScoreUsernames.length < MAX_USERS_PER_HIGH_SCORE){
-                                        if (i === currentUserIndex)
-                                            thisHighScoreUsernames.push('<span class="this-user">' + users[i].username + '</span>');
-                                        else
-                                            thisHighScoreUsernames.push(users[i].username);
-                                    }
-                                    else
-                                        thisHighScoreUsernames = thisHighScoreUsernames.join(', ') + '…';
-                                }
+                                if (i === currentUserIndex)
+                                    thisHighScoreUsernames.unshift('<span class="this-user">' + users[i].username + '</span>');
+                                else
+                                    thisHighScoreUsernames.push(users[i].username);
                             }
                         }
                     }
@@ -464,16 +458,18 @@ const quizOverWrapper = document.createElement('div');
                             output[OUTPUT_NUM_INITIAL_ELEMS - 1] = "<p class='global-high-scores-list-empty'>There are no high scores to show at this time.<br/>Check back here soon for updates!</p>";
                             return output;
                         }
-                        else
+                        else //this handles if the CURRENT (not all) high score is 0 (which should not be included in high score list)
                             break;
                     }
 
-                    if (typeof thisHighScoreUsernames === 'object')
+                    if (thisHighScoreUsernames.length <= MAX_USERS_PER_HIGH_SCORE)
                         thisHighScoreUsernames = thisHighScoreUsernames.join(', ');
+                    else
+                        thisHighScoreUsernames = thisHighScoreUsernames.slice(0, MAX_USERS_PER_HIGH_SCORE).join(', ') + '…';
                     
                     highestScoreSoFar = thisHighScore;
 
-                    output.push('<li class=><span>' + thisHighScore + '</span> — ' + thisHighScoreUsernames + '</li>');
+                    output.push('<li><span class="high-score-number">' + thisHighScore + '</span> — ' + thisHighScoreUsernames + '</li>');
                 }
 
                 output.push('</ol>');
