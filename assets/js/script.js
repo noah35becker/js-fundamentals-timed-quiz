@@ -527,7 +527,6 @@ const quizOverWrapper = document.createElement('div');
                 var choiceEl = choiceElTemplate.cloneNode();
                     choiceEl.textContent = currentQ.choices[i].text;
                     choiceEl.setAttribute('choice-id', i);
-                    choiceEl.addEventListener('click', choiceBtnListener);
 
                 choicesWrapper.appendChild(choiceEl);
             }
@@ -882,36 +881,39 @@ startQuizBtn.addEventListener('click', function(){
 });
 
 
-function choiceBtnListener(){
-    if (qsRandOrder[currentQIndex].choices[this.getAttribute('choice-id')].isRight()){
-        currentQIndex++;
-        if (currentQIndex > (qsRandOrder.length - 1)){
-            stopQuizTimer();
-            showQuizOverScreen();
+choicesWrapper.addEventListener('click', function(event){
+    var choiceBtn = event.target.matches('.choice-btn') ? event.target : null;
+
+    if (choiceBtn){
+        if (qsRandOrder[currentQIndex].choices[choiceBtn.getAttribute('choice-id')].isRight()){
+            currentQIndex++;
+            if (currentQIndex > (qsRandOrder.length - 1)){
+                stopQuizTimer();
+                showQuizOverScreen();
+            }
+            else{
+                questionCorrectEl.style.opacity = 1;
+                setTimeout(function(){
+                    questionCorrectEl.style.opacity = 0;
+                }, 1300);
+
+                showCurrentQuestion();
+            }
         }
         else{
-            questionCorrectEl.style.opacity = 1;
-            setTimeout(function(){
-                questionCorrectEl.style.opacity = 0;
-            }, 1300);
-
-            showCurrentQuestion();
+            timeLeft -= TIME_PENALTY;
+            
+            refreshTimeLeft();
+            choiceBtn.append(' ❌');
+            choiceBtn.setAttribute('disabled', '');
+            
+            timerPenaltyMsg.style.opacity = 1;
+                setTimeout(function(){
+                    timerPenaltyMsg.style.opacity = 0;
+                }, 1300);
         }
     }
-    else{
-        timeLeft -= TIME_PENALTY;
-        
-        refreshTimeLeft();
-        this.append(' ❌');
-        this.setAttribute('disabled', '');
-        
-        timerPenaltyMsg.style.opacity = 1;
-            setTimeout(function(){
-                timerPenaltyMsg.style.opacity = 0;
-            }, 1300);
-        //add other css restylings, e.g. making the button pink-red, giving it a thicker border
-    }
-}
+});
 
 
 tryAgainBtn.addEventListener('click', showPreQuizScreen);
